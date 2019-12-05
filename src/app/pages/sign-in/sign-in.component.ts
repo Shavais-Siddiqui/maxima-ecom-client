@@ -3,7 +3,10 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { emailValidator, matchingPasswords } from '../../theme/utils/app-validators';
-
+import { AuthService } from "angularx-social-login";
+import { SocialUser } from "angularx-social-login";
+import { FacebookLoginProvider, GoogleLoginProvider } from "angularx-social-login";
+ 
 @Component({
   selector: 'app-sign-in',
   templateUrl: './sign-in.component.html',
@@ -13,12 +16,16 @@ export class SignInComponent implements OnInit {
   loginForm: FormGroup;
   registerForm: FormGroup;
 
-  constructor(public formBuilder: FormBuilder, public router:Router, public snackBar: MatSnackBar) { }
+  private user: SocialUser;
+  private loggedIn: boolean;
+
+  constructor(public formBuilder: FormBuilder, public router: Router, public snackBar: MatSnackBar, private authService: AuthService) { }
 
   ngOnInit() {
+
     this.loginForm = this.formBuilder.group({
       'email': ['', Validators.compose([Validators.required, emailValidator])],
-      'password': ['', Validators.compose([Validators.required, Validators.minLength(6)])] 
+      'password': ['', Validators.compose([Validators.required, Validators.minLength(6)])]
     });
 
     this.registerForm = this.formBuilder.group({
@@ -26,17 +33,31 @@ export class SignInComponent implements OnInit {
       'email': ['', Validators.compose([Validators.required, emailValidator])],
       'password': ['', Validators.required],
       'confirmPassword': ['', Validators.required]
-    },{validator: matchingPasswords('password', 'confirmPassword')});
+    }, { validator: matchingPasswords('password', 'confirmPassword') });
+
+    this.authService.authState.subscribe((user) => {
+      this.user = user;
+      console.log(user)
+      this.loggedIn = (user != null);
+    });
 
   }
 
-  public onLoginFormSubmit(values:Object):void {
+  signInWithGoogle(): void {
+    this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
+  }
+ 
+  signInWithFB(): void {
+    this.authService.signIn(FacebookLoginProvider.PROVIDER_ID);
+  }
+
+  public onLoginFormSubmit(values: Object): void {
     if (this.loginForm.valid) {
       this.router.navigate(['/']);
     }
   }
 
-  public onRegisterFormSubmit(values:Object):void {
+  public onRegisterFormSubmit(values: Object): void {
     if (this.registerForm.valid) {
       this.snackBar.open('You registered successfully!', '×', { panelClass: 'success', verticalPosition: 'top', duration: 3000 });
     }
