@@ -24,6 +24,15 @@ export class SignInComponent implements OnInit {
 
   ngOnInit() {
 
+    this.authService.authState.subscribe((user) => {
+      this.user = user;
+      this.loggedIn = (user != null);
+      if (this.loggedIn) {
+        console.log('User loged in!', this.user)
+        this.router.navigate(['/']);
+      }
+    });
+
     this.loginForm = this.formBuilder.group({
       'email': ['', Validators.compose([Validators.required, emailValidator])],
       'password': ['', Validators.compose([Validators.required, Validators.minLength(6)])]
@@ -36,31 +45,14 @@ export class SignInComponent implements OnInit {
       'confirmPassword': ['', Validators.required]
     }, { validator: matchingPasswords('password', 'confirmPassword') });
 
-    this.authService.authState.subscribe((user) => {
-      this.user = user;
-      console.log(user)
-      this.loggedIn = (user != null);
-      if (user != null) {
-        console.log('User not loged in!')
-      }
-    });
-
   }
 
   signInWithGoogle(): void {
-    if (this.loggedIn) {
-      this.snackBar.open('Logged in successfully!', '×', { panelClass: 'success', verticalPosition: 'top', duration: 3000 });
-    } else {
-      this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
-    }
+    this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
   }
 
   signInWithFB(): void {
-    if (this.loggedIn) {
-      this.snackBar.open('Logged in successfully!', '×', { panelClass: 'success', verticalPosition: 'top', duration: 3000 });
-    } else {
-      this.authService.signIn(FacebookLoginProvider.PROVIDER_ID);
-    }
+    this.authService.signIn(FacebookLoginProvider.PROVIDER_ID);
   }
 
   public onLoginFormSubmit(values: Object): void {
