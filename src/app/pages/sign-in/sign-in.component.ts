@@ -6,7 +6,8 @@ import { emailValidator, matchingPasswords } from '../../theme/utils/app-validat
 import { AuthService } from "angularx-social-login";
 import { SocialUser } from "angularx-social-login";
 import { FacebookLoginProvider, GoogleLoginProvider } from "angularx-social-login";
- 
+import { AuthenticationService } from 'src/app/services/authentication.service';
+
 @Component({
   selector: 'app-sign-in',
   templateUrl: './sign-in.component.html',
@@ -19,7 +20,7 @@ export class SignInComponent implements OnInit {
   private user: SocialUser;
   private loggedIn: boolean;
 
-  constructor(public formBuilder: FormBuilder, public router: Router, public snackBar: MatSnackBar, private authService: AuthService) { }
+  constructor(public formBuilder: FormBuilder, public router: Router, public snackBar: MatSnackBar, public authService: AuthService, public auth: AuthenticationService) { }
 
   ngOnInit() {
 
@@ -39,16 +40,27 @@ export class SignInComponent implements OnInit {
       this.user = user;
       console.log(user)
       this.loggedIn = (user != null);
+      if (user != null) {
+        console.log('User not loged in!')
+      }
     });
 
   }
 
   signInWithGoogle(): void {
-    this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
+    if (this.loggedIn) {
+      this.snackBar.open('Logged in successfully!', '×', { panelClass: 'success', verticalPosition: 'top', duration: 3000 });
+    } else {
+      this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
+    }
   }
- 
+
   signInWithFB(): void {
-    this.authService.signIn(FacebookLoginProvider.PROVIDER_ID);
+    if (this.loggedIn) {
+      this.snackBar.open('Logged in successfully!', '×', { panelClass: 'success', verticalPosition: 'top', duration: 3000 });
+    } else {
+      this.authService.signIn(FacebookLoginProvider.PROVIDER_ID);
+    }
   }
 
   public onLoginFormSubmit(values: Object): void {
