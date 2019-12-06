@@ -20,10 +20,7 @@ export class SignInComponent implements OnInit {
   private user: SocialUser;
   private loggedIn: boolean;
 
-  constructor(public formBuilder: FormBuilder, public router: Router, public snackBar: MatSnackBar, public authService: AuthService, public auth: AuthenticationService) { }
-
-  ngOnInit() {
-
+  constructor(public formBuilder: FormBuilder, public router: Router, public snackBar: MatSnackBar, public authService: AuthService, public auth: AuthenticationService) {
     this.authService.authState.subscribe((user) => {
       this.user = user;
       this.loggedIn = (user != null);
@@ -32,6 +29,9 @@ export class SignInComponent implements OnInit {
         this.router.navigate(['/']);
       }
     });
+  }
+
+  ngOnInit() {
 
     this.loginForm = this.formBuilder.group({
       'email': ['', Validators.compose([Validators.required, emailValidator])],

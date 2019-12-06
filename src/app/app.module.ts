@@ -25,6 +25,25 @@ import { AppService } from './app.service';
 import { AppInterceptor } from './theme/utils/app-interceptor';
 import { OptionsComponent } from './theme/components/options/options.component';
 import { FooterComponent } from './theme/components/footer/footer.component';
+// Social Login
+import { SocialLoginModule, AuthServiceConfig } from "angularx-social-login";
+import { GoogleLoginProvider, FacebookLoginProvider } from "angularx-social-login"
+
+
+let config = new AuthServiceConfig([
+  {
+    id: GoogleLoginProvider.PROVIDER_ID,
+    provider: new GoogleLoginProvider("262720212345-go8ovuc646odkpvjb2hkmfcu181j8ls4.apps.googleusercontent.com")
+  },
+  {
+    id: FacebookLoginProvider.PROVIDER_ID,
+    provider: new FacebookLoginProvider("809982539441459")
+  }
+]);
+
+export function provideConfig() {
+  return config;
+}
 
 
 @NgModule({
@@ -37,7 +56,9 @@ import { FooterComponent } from './theme/components/footer/footer.component';
       apiKey: 'AIzaSyBNcjxo_35qnEG17dQvvftWa68eZWepYE0'
     }),
     SharedModule,
-    routing
+    routing,
+    SocialLoginModule
+
   ],
   declarations: [
     AppComponent,
@@ -53,6 +74,10 @@ import { FooterComponent } from './theme/components/footer/footer.component';
   providers: [
     AppSettings,
     AppService,   
+    {
+      provide: AuthServiceConfig,
+      useFactory: provideConfig
+    },
     { provide: OverlayContainer, useClass: CustomOverlayContainer },
     { provide: MAT_MENU_SCROLL_STRATEGY, useFactory: menuScrollStrategy, deps: [Overlay] },
     { provide: HTTP_INTERCEPTORS, useClass: AppInterceptor, multi: true }
