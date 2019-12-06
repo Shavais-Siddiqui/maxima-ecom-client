@@ -9,8 +9,8 @@ import { Data, AppService } from '../../app.service';
   styleUrls: ['./checkout.component.scss']
 })
 export class CheckoutComponent implements OnInit {
-  @ViewChild('horizontalStepper') horizontalStepper: MatStepper;
-  @ViewChild('verticalStepper') verticalStepper: MatStepper;
+  @ViewChild('horizontalStepper', {static: false}) horizontalStepper: MatStepper;
+  @ViewChild('verticalStepper', {static: false}) verticalStepper: MatStepper;
   billingForm: FormGroup;
   deliveryForm: FormGroup;
   paymentForm: FormGroup;

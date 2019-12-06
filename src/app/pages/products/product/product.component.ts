@@ -14,8 +14,8 @@ import { ProductZoomComponent } from './product-zoom/product-zoom.component';
   styleUrls: ['./product.component.scss']
 })
 export class ProductComponent implements OnInit {
-  @ViewChild('zoomViewer') zoomViewer;
-  @ViewChild(SwiperDirective) directiveRef: SwiperDirective;
+  @ViewChild('zoomViewer', {static: false}) zoomViewer;
+  @ViewChild(SwiperDirective, {static: false}) directiveRef: SwiperDirective;
   public config: SwiperConfigInterface={};
   public product: Product;
   public image: any;

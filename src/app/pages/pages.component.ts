@@ -17,7 +17,7 @@ export class PagesComponent implements OnInit {
   public categories:Category[];
   public category:Category;
   public sidenavMenuItems:Array<any>;
-  @ViewChild('sidenav') sidenav:any;
+  @ViewChild('sidenav', {static: false}) sidenav:any;
 
   public settings: Settings;
   constructor(public appSettings:AppSettings, 

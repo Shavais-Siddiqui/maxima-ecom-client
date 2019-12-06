@@ -7,7 +7,7 @@ import { Router, NavigationEnd } from '@angular/router';
   styleUrls: ['./account.component.scss']
 })
 export class AccountComponent implements OnInit {
-  @ViewChild('sidenav') sidenav: any;
+  @ViewChild('sidenav', {static: false}) sidenav: any;
   public sidenavOpen:boolean = true;
   public links = [
     { name: 'Account Dashboard', href: 'dashboard', icon: 'dashboard' },

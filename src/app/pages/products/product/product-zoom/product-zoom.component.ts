@@ -9,7 +9,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 })
 export class ProductZoomComponent implements OnInit {
   
-  @ViewChild('zoomImage') zoomImage;
+  @ViewChild('zoomImage', {static: false}) zoomImage;
 
   constructor(public dialogRef: MatDialogRef<ProductZoomComponent>,
               @Inject(MAT_DIALOG_DATA) public image:any) { }

@@ -11,7 +11,7 @@ import { Product, Category } from "../../../app.models";
   styleUrls: ['./brand.component.scss']
 })
 export class BrandComponent implements OnInit {
-  @ViewChild('sidenav') sidenav: any;
+  @ViewChild('sidenav', {static: false}) sidenav: any;
   public sidenavOpen:boolean = true;
   private sub: any;
   public viewType: string = 'grid';
