@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { SwiperConfigInterface, SwiperDirective } from 'ngx-swiper-wrapper';
 import { Data, AppService } from '../../../app.service';
 import { Product } from "../../../app.models";

@@ -6,7 +6,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { AgmCoreModule } from '@agm/core';
 
 import { OverlayContainer, Overlay } from '@angular/cdk/overlay';
-import { MAT_MENU_SCROLL_STRATEGY } from '@angular/material';
+import { MAT_MENU_SCROLL_STRATEGY } from '@angular/material/menu';
 import { CustomOverlayContainer } from './theme/utils/custom-overlay-container';
 import { menuScrollStrategy } from './theme/utils/scroll-strategy';
 
