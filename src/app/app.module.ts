@@ -2,8 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgxSpinnerModule } from 'ngx-spinner';
-import { AgmCoreModule } from '@agm/core';
+// import { NgxSpinnerModule } from 'ngx-spinner';
+// import { AgmCoreModule } from '@agm/core';
 
 import { OverlayContainer, Overlay } from '@angular/cdk/overlay';
 import { MAT_MENU_SCROLL_STRATEGY } from '@angular/material';
@@ -51,10 +51,10 @@ export function provideConfig() {
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    NgxSpinnerModule,
-    AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyBNcjxo_35qnEG17dQvvftWa68eZWepYE0'
-    }),
+    // NgxSpinnerModule,
+    // AgmCoreModule.forRoot({
+    //   apiKey: 'AIzaSyBNcjxo_35qnEG17dQvvftWa68eZWepYE0'
+    // }),
     SharedModule,
     routing,
     SocialLoginModule
