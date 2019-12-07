@@ -25,6 +25,7 @@ export class SignInComponent implements OnInit {
       this.user = user;
       this.loggedIn = (user != null);
       if (this.loggedIn) {
+        this.auth.updateLoggedInStatus(true);
         console.log('User loged in!', this.user)
         this.router.navigate(['/']);
       }

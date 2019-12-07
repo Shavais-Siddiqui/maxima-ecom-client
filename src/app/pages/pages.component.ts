@@ -2,7 +2,7 @@ import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
 import { Settings, AppSettings } from '../app.settings';
-import { AppService } from '../app.service';
+import { AppService } from '../services/app.service';
 import { Category, Product } from '../app.models';
 import { SidenavMenuService } from '../theme/components/sidenav-menu/sidenav-menu.service';
 

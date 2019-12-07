@@ -4,7 +4,7 @@ import { DecimalPipe } from '@angular/common';
 import { SwiperConfigInterface } from 'ngx-swiper-wrapper';
 import { MatDialog } from '@angular/material/dialog';
 import { ProductDialogComponent } from './product-dialog/product-dialog.component';
-import { Data, AppService } from '../../app.service';
+import { Data, AppService } from '../../services/app.service';
 import { Product } from "../../app.models";
 
 @Component({

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppService } from '../../../app.service';
+import { AppService } from '../../../services/app.service';
 
 @Component({
   selector: 'app-addresses',
