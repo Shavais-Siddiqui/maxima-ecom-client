@@ -25,9 +25,14 @@ export class SignInComponent implements OnInit {
       this.user = user;
       this.loggedIn = (user != null);
       if (this.loggedIn) {
-        this.auth.updateLoggedInStatus(true);
-        console.log('User loged in!', this.user)
-        this.router.navigate(['/']);
+        this.auth.verifySocialLogin(user).subscribe((res: any) => {
+          if (res.data.verfied) {
+            localStorage.setItem('token', res.data.token);
+            this.auth.updateLoggedInStatus(true);
+            console.log('User loged in!', res.data)
+            this.router.navigate(['/']);
+          }
+        })
       }
     });
   }
@@ -45,7 +50,6 @@ export class SignInComponent implements OnInit {
       'password': ['', Validators.required],
       'confirmPassword': ['', Validators.required]
     }, { validator: matchingPasswords('password', 'confirmPassword') });
-
   }
 
   signInWithGoogle(): void {

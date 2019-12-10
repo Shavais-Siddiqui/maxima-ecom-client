@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Settings, AppSettings } from './app.settings';
+import { AuthenticationService } from './services/authentication.service';
 
 @Component({
   selector: 'app-root',
@@ -10,19 +11,21 @@ import { Settings, AppSettings } from './app.settings';
 export class AppComponent {
   loading: boolean = false;
   public settings: Settings;
-  constructor(public appSettings:AppSettings, public router: Router){
+  constructor(public appSettings: AppSettings, public router: Router, public authenticationService: AuthenticationService) {
+    console.log('App')
     this.settings = this.appSettings.settings;
+    // this.authenticationService.initialStatus();
   }
 
   ngOnInit() {
-   // this.router.navigate(['']);  //redirect other pages to homepage on browser refresh    
+    // this.router.navigate(['']);  //redirect other pages to homepage on browser refresh    
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-          window.scrollTo(0,0);
+        window.scrollTo(0, 0);
       }
-    })  
+    })
   }
 }
