@@ -17,7 +17,9 @@ export class AuthenticationService {
   constructor(private authService: AuthService, private http: HttpClient) {
     console.log('Service')
     this.token = localStorage.getItem('token');
-    this.token ? this.initialValue == true : this.initialValue == false;
+    console.log(this.token)
+    this.token ? this.initialValue = true : this.initialValue = false;
+    console.log(this.initialValue)
     this.loggedIn = new BehaviorSubject<boolean>(this.initialValue);
     this.isLoggedIn = this.loggedIn.asObservable();
   }
@@ -30,6 +32,7 @@ export class AuthenticationService {
   }
 
   signOut(): void {
+    localStorage.removeItem('token');
     this.authService.signOut();
     this.updateLoggedInStatus(false);
   }

@@ -21,18 +21,27 @@ export class SignInComponent implements OnInit {
   private loggedIn: boolean;
 
   constructor(public formBuilder: FormBuilder, public router: Router, public snackBar: MatSnackBar, public authService: AuthService, public auth: AuthenticationService) {
-    this.authService.authState.subscribe((user) => {
-      this.user = user;
-      this.loggedIn = (user != null);
-      if (this.loggedIn) {
-        this.auth.verifySocialLogin(user).subscribe((res: any) => {
-          if (res.data.verfied) {
-            localStorage.setItem('token', res.data.token);
-            this.auth.updateLoggedInStatus(true);
-            console.log('User loged in!', res.data)
-            this.router.navigate(['/']);
+    this.auth.isLoggedIn.subscribe(res => {
+      console.log(res, 'First obs')
+      if (res == true) {
+        this.router.navigate(['/']);
+      } else {
+        this.authService.authState.subscribe((user) => {
+          console.log(user, 'Second obs')
+          this.user = user;
+          this.loggedIn = (user != null);
+          if (this.loggedIn) {
+            this.auth.verifySocialLogin(user).subscribe((res: any) => {
+              console.log(res, 'Third obs')
+              if (res.data.verfied) {
+                localStorage.setItem('token', res.data.token);
+                this.auth.updateLoggedInStatus(true);
+                console.log('User loged in!', res.data)
+                this.router.navigate(['/']);
+              }
+            })
           }
-        })
+        });
       }
     });
   }
