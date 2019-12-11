@@ -16,6 +16,7 @@ export class AuthenticationService {
 
   constructor(private authService: AuthService, private http: HttpClient) {
     console.log('Service')
+    // Get token and verify its expiry
     this.token = localStorage.getItem('token');
     console.log(this.token)
     this.token ? this.initialValue = true : this.initialValue = false;

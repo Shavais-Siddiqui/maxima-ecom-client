@@ -7,6 +7,7 @@ import { AuthService } from "angularx-social-login";
 import { SocialUser } from "angularx-social-login";
 import { FacebookLoginProvider, GoogleLoginProvider } from "angularx-social-login";
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-sign-in',
@@ -19,6 +20,7 @@ export class SignInComponent implements OnInit {
 
   private user: SocialUser;
   private loggedIn: boolean;
+  private subscription: Subscription = new Subscription();
 
   constructor(public formBuilder: FormBuilder, public router: Router, public snackBar: MatSnackBar, public authService: AuthService, public auth: AuthenticationService) {
     this.auth.isLoggedIn.subscribe(res => {
@@ -26,7 +28,8 @@ export class SignInComponent implements OnInit {
       if (res == true) {
         this.router.navigate(['/']);
       } else {
-        this.authService.authState.subscribe((user) => {
+
+        this.subscription.add(this.authService.authState.subscribe((user) => {
           console.log(user, 'Second obs')
           this.user = user;
           this.loggedIn = (user != null);
@@ -41,7 +44,9 @@ export class SignInComponent implements OnInit {
               }
             })
           }
-        });
+        }))
+
+
       }
     });
   }
@@ -79,6 +84,10 @@ export class SignInComponent implements OnInit {
     if (this.registerForm.valid) {
       this.snackBar.open('You registered successfully!', '×', { panelClass: 'success', verticalPosition: 'top', duration: 3000 });
     }
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
 }
