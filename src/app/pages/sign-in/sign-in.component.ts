@@ -28,8 +28,7 @@ export class SignInComponent implements OnInit {
       if (res == true) {
         this.router.navigate(['/']);
       } else {
-
-        this.subscription.add(this.authService.authState.subscribe((user) => {
+        this.authService.authState.subscribe((user) => {
           console.log(user, 'Second obs')
           this.user = user;
           this.loggedIn = (user != null);
@@ -44,9 +43,7 @@ export class SignInComponent implements OnInit {
               }
             })
           }
-        }))
-
-
+        });
       }
     });
   }
@@ -87,7 +84,7 @@ export class SignInComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+
   }
 
 }

@@ -34,8 +34,8 @@ export class AuthenticationService {
 
   signOut(): void {
     localStorage.removeItem('token');
-    this.authService.signOut();
     this.updateLoggedInStatus(false);
+    this.authService.signOut();
   }
 
   verifySocialLogin(data) {
