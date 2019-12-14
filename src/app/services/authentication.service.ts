@@ -13,6 +13,8 @@ export class AuthenticationService {
   public loggedIn;
   public isLoggedIn;
   public baseUrl = 'https://maximaecommerceserver.herokuapp.com/api/'
+  public localUrl = 'http://localhost:3000/api/'
+
 
   constructor(private authService: AuthService, private http: HttpClient) {
     console.log('Service')
@@ -40,5 +42,17 @@ export class AuthenticationService {
 
   verifySocialLogin(data) {
     return this.http.post(this.baseUrl + 'check-social-login', data)
+  }
+
+  addUser(data) {
+    return this.http.post(this.baseUrl + 'add-user', data)
+  }
+
+  login(data) {
+    return this.http.post(this.baseUrl + 'login', data)
+  }
+
+  verifyEmail(id) {
+    return this.http.post(this.baseUrl + 'verify-email/' + id, 'e.g');
   }
 }

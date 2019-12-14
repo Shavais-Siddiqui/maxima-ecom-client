@@ -23,18 +23,10 @@ export class SignInComponent implements OnInit {
   private subscription: Subscription = new Subscription();
 
   constructor(public formBuilder: FormBuilder, public router: Router, public snackBar: MatSnackBar, public authService: AuthService, public auth: AuthenticationService) {
-    // this.auth.isLoggedIn.subscribe(res => {
-    //   console.log(res, 'First obs')
-    //   if (res == true) {
-    //     this.router.navigate(['/']);
-    //   }
-    // });
-    //  else {
     let token = localStorage.getItem('token');
     if (token) {
       this.router.navigate(['/']);
     }
-
   }
 
   ngOnInit() {
@@ -79,12 +71,19 @@ export class SignInComponent implements OnInit {
 
   public onLoginFormSubmit(values: Object): void {
     if (this.loginForm.valid) {
-      this.router.navigate(['/']);
+      this.auth.login(this.loginForm.value).subscribe(res => {
+        console.log(res)
+        this.router.navigate(['/']);
+      })
     }
   }
 
   public onRegisterFormSubmit(values: Object): void {
     if (this.registerForm.valid) {
+      console.log(this.registerForm.value)
+      this.auth.addUser(this.registerForm.value).subscribe(res => {
+        console.log(res)
+      })
       this.snackBar.open('You registered successfully!', '×', { panelClass: 'success', verticalPosition: 'top', duration: 3000 });
     }
   }

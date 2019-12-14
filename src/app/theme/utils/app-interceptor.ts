@@ -11,6 +11,7 @@ export class AppInterceptor implements HttpInterceptor {
     intercept (req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
         this.spinner.show();
+        const started = Date.now();            
         
         return next.handle(req).do((event: HttpEvent<any>) => {
           if (event instanceof HttpResponse) {        
@@ -18,11 +19,11 @@ export class AppInterceptor implements HttpInterceptor {
           }
         }, (err: any) => {
           if (err instanceof HttpErrorResponse) {
-            const started = Date.now();            
+            this.spinner.hide();
             const elapsed = Date.now() - started;
             console.log(`Request for ${req.urlWithParams} failed after ${elapsed} ms.`);
            // debugger;
           }
         })
-    }  
+    }
 }

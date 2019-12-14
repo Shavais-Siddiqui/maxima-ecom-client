@@ -51,6 +51,7 @@ import { ProductsCarouselComponent } from './products-carousel/products-carousel
 import { ProductDialogComponent } from './products-carousel/product-dialog/product-dialog.component';
 import { BannersComponent } from './banners/banners.component';
 import { CategoryListComponent } from './category-list/category-list.component';
+import { VerificationComponent } from './verification/verification.component';
 
 @NgModule({
   imports: [
@@ -136,7 +137,8 @@ import { CategoryListComponent } from './category-list/category-list.component';
     ProductsCarouselComponent,
     ProductDialogComponent,
     BannersComponent,
-    CategoryListComponent
+    CategoryListComponent,
+    VerificationComponent
   ],
   declarations: [
     RatingComponent,
@@ -146,7 +148,8 @@ import { CategoryListComponent } from './category-list/category-list.component';
     ProductsCarouselComponent,
     ProductDialogComponent,
     BannersComponent,
-    CategoryListComponent
+    CategoryListComponent,
+    VerificationComponent
   ],
   entryComponents:[
     ProductDialogComponent

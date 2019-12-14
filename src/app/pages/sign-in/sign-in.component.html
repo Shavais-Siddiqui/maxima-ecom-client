@@ -2,7 +2,7 @@
     <div fxLayout="row wrap">
         <div fxFlex="100" fxFlex.gt-sm="50" class="p-2">
             <h2 class="text-muted text-center">Sign In</h2>
-            <form [formGroup]="loginForm" (ngSubmit)="onLoginFormSubmit(loginForm.value)">
+            <form [formGroup]="loginForm">
                 <mat-form-field class="w-100 mt-2">
                     <input matInput placeholder="Email" formControlName="email" required>
                     <mat-error *ngIf="loginForm.controls.email.errors?.required">Email is required</mat-error>
@@ -38,7 +38,7 @@
         </div>
         <div fxFlex="100" fxFlex.gt-sm="50" class="p-2" ngClass.sm="mt-2" ngClass.xs="mt-2">
             <h2 class="text-muted text-center">Don't have an account? Sign up now!</h2>
-            <form [formGroup]="registerForm" (ngSubmit)="onRegisterFormSubmit(registerForm.value)">
+            <form [formGroup]="registerForm">
                 <mat-form-field class="w-100 mt-2">
                   <input matInput placeholder="Full Name" formControlName="name" required>
                   <mat-error *ngIf="registerForm.controls.name.errors?.required">Full Name is required</mat-error>
