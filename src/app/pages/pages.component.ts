@@ -5,34 +5,36 @@ import { Settings, AppSettings } from '../app.settings';
 import { AppService } from '../services/app.service';
 import { Category, Product } from '../app.models';
 import { SidenavMenuService } from '../theme/components/sidenav-menu/sidenav-menu.service';
+import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
   selector: 'app-pages',
   templateUrl: './pages.component.html',
   styleUrls: ['./pages.component.scss'],
-  providers: [ SidenavMenuService ]
+  providers: [SidenavMenuService]
 })
 export class PagesComponent implements OnInit {
-  public showBackToTop:boolean = false;
-  public categories:Category[];
-  public category:Category;
-  public sidenavMenuItems:Array<any>;
-  @ViewChild('sidenav', {static: false}) sidenav:any;
+  public showBackToTop: boolean = false;
+  public categories: Category[];
+  public category: Category;
+  public sidenavMenuItems: Array<any>;
+  @ViewChild('sidenav', { static: false }) sidenav: any;
 
   public settings: Settings;
-  constructor(public appSettings:AppSettings, 
-              public appService:AppService, 
-              public sidenavMenuService:SidenavMenuService,
-              public router:Router) { 
-    this.settings = this.appSettings.settings; 
+  constructor(public appSettings: AppSettings,
+    public appService: AppService,
+    public sidenavMenuService: SidenavMenuService,
+    public router: Router,
+    public auth: AuthenticationService) {
+    this.settings = this.appSettings.settings;
   }
 
   ngOnInit() {
     this.getCategories();
     this.sidenavMenuItems = this.sidenavMenuService.getSidenavMenuItems();
-  } 
+  }
 
-  public getCategories(){    
+  public getCategories() {
     this.appService.getCategories().subscribe(data => {
       this.categories = data;
       this.category = data[0];
@@ -40,80 +42,80 @@ export class PagesComponent implements OnInit {
     })
   }
 
-  public changeCategory(event){
-    if(event.target){
+  public changeCategory(event) {
+    if (event.target) {
       this.category = this.categories.filter(category => category.name == event.target.innerText)[0];
     }
-    if(window.innerWidth < 960){
+    if (window.innerWidth < 960) {
       this.stopClickPropagate(event);
-    } 
+    }
   }
 
   public remove(product) {
-      const index: number = this.appService.Data.cartList.indexOf(product);
-      if (index !== -1) {
-          this.appService.Data.cartList.splice(index, 1);
-          this.appService.Data.totalPrice = this.appService.Data.totalPrice - product.newPrice*product.cartCount;
-          this.appService.Data.totalCartCount = this.appService.Data.totalCartCount - product.cartCount;
-          this.appService.resetProductCartCount(product);
-      }        
+    const index: number = this.appService.Data.cartList.indexOf(product);
+    if (index !== -1) {
+      this.appService.Data.cartList.splice(index, 1);
+      this.appService.Data.totalPrice = this.appService.Data.totalPrice - product.newPrice * product.cartCount;
+      this.appService.Data.totalCartCount = this.appService.Data.totalCartCount - product.cartCount;
+      this.appService.resetProductCartCount(product);
+    }
   }
 
-  public clear(){
-    this.appService.Data.cartList.forEach(product=>{
+  public clear() {
+    this.appService.Data.cartList.forEach(product => {
       this.appService.resetProductCartCount(product);
     });
     this.appService.Data.cartList.length = 0;
     this.appService.Data.totalPrice = 0;
     this.appService.Data.totalCartCount = 0;
   }
- 
 
-  public changeTheme(theme){
-    this.settings.theme = theme;       
+
+  public changeTheme(theme) {
+    this.settings.theme = theme;
   }
 
-  public stopClickPropagate(event: any){
+  public stopClickPropagate(event: any) {
     event.stopPropagation();
     event.preventDefault();
   }
 
-  public search(){}
+  public search() { }
 
- 
-  public scrollToTop(){
+
+  public scrollToTop() {
     var scrollDuration = 200;
-    var scrollStep = -window.pageYOffset  / (scrollDuration / 20);
-    var scrollInterval = setInterval(()=>{
-      if(window.pageYOffset != 0){
-         window.scrollBy(0, scrollStep);
+    var scrollStep = -window.pageYOffset / (scrollDuration / 20);
+    var scrollInterval = setInterval(() => {
+      if (window.pageYOffset != 0) {
+        window.scrollBy(0, scrollStep);
       }
-      else{
-        clearInterval(scrollInterval); 
+      else {
+        clearInterval(scrollInterval);
       }
-    },10);
-    if(window.innerWidth <= 768){
-      setTimeout(() => { window.scrollTo(0,0) });
+    }, 10);
+    if (window.innerWidth <= 768) {
+      setTimeout(() => { window.scrollTo(0, 0) });
     }
   }
   @HostListener('window:scroll', ['$event'])
   onWindowScroll($event) {
-    ($event.target.documentElement.scrollTop > 300) ? this.showBackToTop = true : this.showBackToTop = false;  
+    ($event.target.documentElement.scrollTop > 300) ? this.showBackToTop = true : this.showBackToTop = false;
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) { 
-        this.sidenav.close(); 
-      }                
+      if (event instanceof NavigationEnd) {
+        this.sidenav.close();
+      }
     });
     this.sidenavMenuService.expandActiveSubMenu(this.sidenavMenuService.getSidenavMenuItems());
   }
 
-  public closeSubMenus(){
-    if(window.innerWidth < 960){
+  public closeSubMenus() {
+    if (window.innerWidth < 960) {
       this.sidenavMenuService.closeAllSubMenus();
-    }    
+    }
   }
 
 }

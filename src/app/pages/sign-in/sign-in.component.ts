@@ -39,7 +39,8 @@ export class SignInComponent implements OnInit {
         this.auth.verifySocialLogin(user).subscribe((res: any) => {
           console.log(res, 'Third obs')
           if (res.data.verfied) {
-            localStorage.setItem('token', res.data.token);
+            localStorage.setItem('token', res.token);
+            this.auth.user = res.data;
             this.auth.updateLoggedInStatus(true);
             console.log('User loged in!', res.data)
             this.router.navigate(['/']);
@@ -71,8 +72,12 @@ export class SignInComponent implements OnInit {
 
   public onLoginFormSubmit(values: Object): void {
     if (this.loginForm.valid) {
-      this.auth.login(this.loginForm.value).subscribe(res => {
+      this.auth.login(this.loginForm.value).subscribe((res: any) => {
         console.log(res)
+        localStorage.setItem('token', res.token);
+        this.auth.user = res.data;
+        this.auth.updateLoggedInStatus(true);
+        this.snackBar.open('Welcome again!.', '×', { panelClass: 'success', verticalPosition: 'top', duration: 3000 });
         this.router.navigate(['/']);
       })
     }
@@ -81,10 +86,14 @@ export class SignInComponent implements OnInit {
   public onRegisterFormSubmit(values: Object): void {
     if (this.registerForm.valid) {
       console.log(this.registerForm.value)
-      this.auth.addUser(this.registerForm.value).subscribe(res => {
+      this.auth.addUser(this.registerForm.value).subscribe((res: any) => {
         console.log(res)
+        localStorage.setItem('token', res.token);
+        this.auth.user = res.data;
+        this.auth.updateLoggedInStatus(true);
+        this.snackBar.open('You registered successfully, please verify your Email.', '×', { panelClass: 'success', verticalPosition: 'top', duration: 5000 });
+        this.router.navigate(['/']);
       })
-      this.snackBar.open('You registered successfully!', '×', { panelClass: 'success', verticalPosition: 'top', duration: 3000 });
     }
   }
 

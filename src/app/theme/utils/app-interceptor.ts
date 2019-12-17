@@ -6,24 +6,31 @@ import 'rxjs/add/operator/do';
 
 @Injectable()
 export class AppInterceptor implements HttpInterceptor {
-    constructor( private spinner: NgxSpinnerService) {}
-  
-    intercept (req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  constructor(private spinner: NgxSpinnerService) { }
 
-        this.spinner.show();
-        const started = Date.now();            
-        
-        return next.handle(req).do((event: HttpEvent<any>) => {
-          if (event instanceof HttpResponse) {        
-             this.spinner.hide();
-          }
-        }, (err: any) => {
-          if (err instanceof HttpErrorResponse) {
-            this.spinner.hide();
-            const elapsed = Date.now() - started;
-            console.log(`Request for ${req.urlWithParams} failed after ${elapsed} ms.`);
-           // debugger;
-          }
-        })
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const token = localStorage.getItem('token');
+    if (token) {
+      console.log(token)
+      req = req.clone({
+        headers: req.headers.set('Authorization', `${token}`),
+      });
     }
+    console.log(req)
+    this.spinner.show();
+    const started = Date.now();
+
+    return next.handle(req).do((event: HttpEvent<any>) => {
+      if (event instanceof HttpResponse) {
+        this.spinner.hide();
+      }
+    }, (err: any) => {
+      if (err instanceof HttpErrorResponse) {
+        this.spinner.hide();
+        const elapsed = Date.now() - started;
+        console.log(`Request for ${req.urlWithParams} failed after ${elapsed} ms.`);
+        // debugger;
+      }
+    })
+  }
 }

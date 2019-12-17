@@ -27,8 +27,8 @@ import { OptionsComponent } from './theme/components/options/options.component';
 import { FooterComponent } from './theme/components/footer/footer.component';
 // Social Login
 import { SocialLoginModule, AuthServiceConfig } from "angularx-social-login";
-import { GoogleLoginProvider, FacebookLoginProvider } from "angularx-social-login"
-
+import { GoogleLoginProvider, FacebookLoginProvider } from "angularx-social-login";
+import { ActivationHeaderComponent } from './theme/components/activation-header/activation-header.component';
 
 let config = new AuthServiceConfig([
   {
@@ -69,7 +69,8 @@ export function provideConfig() {
     SidenavMenuComponent,
     BreadcrumbComponent,
     OptionsComponent,
-    FooterComponent    
+    FooterComponent,
+    ActivationHeaderComponent,
   ], 
   providers: [
     AppSettings,

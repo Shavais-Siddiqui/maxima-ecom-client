@@ -39,8 +39,7 @@
             <span (mouseleave)="accountMenuTrigger.closeMenu()">
                 <div fxLayout="row" fxLayoutAlign="space-around center" class="user-info">
                     <img src="assets/images/others/user.jpg" alt="user-image" width="50">
-                    <p>Emilio Verdines <br> <small>emilio_v (152<mat-icon class="mat-icon-xs">star</mat-icon>)</small>
-                    </p>
+                    <p>{{authService.user.name}}</p>
                 </div>
                 <div class="divider"></div>
                 <a mat-menu-item routerLink="/account">
