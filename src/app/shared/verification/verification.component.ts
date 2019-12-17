@@ -15,9 +15,9 @@ export class VerificationComponent implements OnInit {
     console.log(id);
     this.auth.verifyEmail(id).subscribe((res: any) => {
       if (res.message == 'Approved') {
-        this.snackBar.open('Welcome, You Verified successfully!', '×', { panelClass: 'success', verticalPosition: 'top', duration: 3000 });
+        this.auth.user = res.data;
+        this.snackBar.open('Welcome, You Account Has Been Verified Successfully!', '×', { panelClass: 'success', verticalPosition: 'top', duration: 3000 });
         this.router.navigate(['/']);
-
       } else {
         this.snackBar.open('Please Verify Again!', '×', { panelClass: 'danger', verticalPosition: 'top', duration: 3000 });
         this.router.navigate(['/']);

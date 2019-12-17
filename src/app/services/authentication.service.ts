@@ -72,4 +72,5 @@ export class AuthenticationService {
       this.user = res.data;
     })
   }
+
 }

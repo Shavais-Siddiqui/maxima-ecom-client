@@ -38,16 +38,11 @@ export class SignInComponent implements OnInit {
       if (this.loggedIn) {
         this.auth.verifySocialLogin(user).subscribe((res: any) => {
           console.log(res, 'Third obs')
-          if (res.message == 'Verified') {
-            localStorage.setItem('token', res.token);
-            this.auth.user = res.data;
-            this.auth.updateLoggedInStatus(true);
-            console.log('User loged in!', res.data)
-            this.router.navigate(['/']);
-          } else {
-            this.snackBar.open('Invalid Login Credentials.', '×', { panelClass: 'success', verticalPosition: 'top', duration: 5000 });
-            this.router.navigate(['/']);
-          }
+          localStorage.setItem('token', res.token);
+          this.auth.user = res.data;
+          this.auth.updateLoggedInStatus(true);
+          console.log('User loged in!', res.data)
+          this.router.navigate(['/']);
         })
       }
     });
