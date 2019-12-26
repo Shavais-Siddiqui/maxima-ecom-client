@@ -12,13 +12,12 @@ export class AppComponent {
   loading: boolean = false;
   public settings: Settings;
   constructor(public appSettings: AppSettings, public router: Router, public authenticationService: AuthenticationService) {
-    console.log('App')
     this.settings = this.appSettings.settings;
     // this.authenticationService.initialStatus();
   }
 
   ngOnInit() {
-    // this.router.navigate(['']);  //redirect other pages to homepage on browser refresh    
+    // this.router.navigate(['']);  //redirect other pages to homepage on browser refresh   
   }
 
   ngAfterViewInit() {

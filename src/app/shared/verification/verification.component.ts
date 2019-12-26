@@ -12,7 +12,6 @@ export class VerificationComponent implements OnInit {
 
   constructor(private auth: AuthenticationService, private route: ActivatedRoute, public router: Router, private snackBar: MatSnackBar) {
     let id = this.route.snapshot.queryParamMap.get('key')
-    console.log(id);
     this.auth.verifyEmail(id).subscribe((res: any) => {
       if (res.message == 'Approved') {
         this.auth.user = res.data;
@@ -27,5 +26,4 @@ export class VerificationComponent implements OnInit {
 
   ngOnInit() {
   }
-
 }

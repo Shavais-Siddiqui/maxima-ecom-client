@@ -12,7 +12,6 @@ export class ActivationHeaderComponent implements OnInit {
   ngOnInit() {
   }
   resendMail() {
-    console.log('Hello')
   }
 
 }

@@ -30,6 +30,14 @@ export class PagesComponent implements OnInit {
   }
 
   ngOnInit() {
+    let cartList = JSON.parse(localStorage.getItem('cartList'));
+    if (cartList) {
+      this.appService.Data.cartList = cartList;
+      cartList.forEach(product => {
+        this.appService.Data.totalPrice = this.appService.Data.totalPrice + (product.cartCount * product.newPrice);
+        this.appService.Data.totalCartCount = this.appService.Data.totalCartCount + product.cartCount;
+      });
+    }
     this.getCategories();
     this.sidenavMenuItems = this.sidenavMenuService.getSidenavMenuItems();
   }

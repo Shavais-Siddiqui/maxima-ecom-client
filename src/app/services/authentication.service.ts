@@ -18,7 +18,6 @@ export class AuthenticationService {
   public user;
 
   constructor(private authService: AuthService, private http: HttpClient) {
-    console.log('Service')
     // Get token and verify its expiry
     this.token = localStorage.getItem('token');
     if (this.token) {
@@ -29,7 +28,6 @@ export class AuthenticationService {
     } else {
       this.initialValue = false;
     }
-    console.log(this.initialValue)
     this.loggedIn = new BehaviorSubject<boolean>(this.initialValue);
     this.isLoggedIn = this.loggedIn.asObservable();
 
@@ -45,10 +43,14 @@ export class AuthenticationService {
     this.loggedIn.next(loggedIn);
   }
 
-  signOut(): void {
+  async signOut() {
     localStorage.removeItem('token');
     this.updateLoggedInStatus(false);
-    this.authService.signOut();
+    try {
+      await this.authService.signOut();
+    }
+    catch {
+    }
   }
 
   verifySocialLogin(data) {

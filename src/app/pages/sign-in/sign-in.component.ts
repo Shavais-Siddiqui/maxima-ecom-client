@@ -32,16 +32,13 @@ export class SignInComponent implements OnInit {
   ngOnInit() {
 
     this.authService.authState.subscribe((user) => {
-      console.log(user, 'Second obs')
       this.user = user;
       this.loggedIn = (user != null);
       if (this.loggedIn) {
-        this.auth.verifySocialLogin(user).subscribe((res: any) => {
-          console.log(res, 'Third obs')
+        this.auth.login(user).subscribe((res: any) => {
           localStorage.setItem('token', res.token);
           this.auth.user = res.data;
           this.auth.updateLoggedInStatus(true);
-          console.log('User loged in!', res.data)
           this.router.navigate(['/']);
         })
       }
@@ -70,8 +67,12 @@ export class SignInComponent implements OnInit {
 
   public onLoginFormSubmit(values: Object): void {
     if (this.loginForm.valid) {
-      this.auth.login(this.loginForm.value).subscribe((res: any) => {
-        console.log(res)
+      let loginData = {
+        email: this.loginForm.get('email'),
+        password: this.loginForm.get('password'),
+        provider: 'MAIL'
+      }
+      this.auth.login(loginData).subscribe((res: any) => {
         localStorage.setItem('token', res.token);
         this.auth.user = res.data;
         this.auth.updateLoggedInStatus(true);
@@ -83,9 +84,7 @@ export class SignInComponent implements OnInit {
 
   public onRegisterFormSubmit(values: Object): void {
     if (this.registerForm.valid) {
-      console.log(this.registerForm.value)
       this.auth.addUser(this.registerForm.value).subscribe((res: any) => {
-        console.log(res)
         localStorage.setItem('token', res.token);
         this.auth.user = res.data;
         this.auth.updateLoggedInStatus(true);

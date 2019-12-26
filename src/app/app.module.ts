@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -29,6 +29,8 @@ import { FooterComponent } from './theme/components/footer/footer.component';
 import { SocialLoginModule, AuthServiceConfig } from "angularx-social-login";
 import { GoogleLoginProvider, FacebookLoginProvider } from "angularx-social-login";
 import { ActivationHeaderComponent } from './theme/components/activation-header/activation-header.component';
+import { GlobalErrorHandler } from './theme/utils/error-handler';
+// import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 let config = new AuthServiceConfig([
   {
@@ -47,7 +49,7 @@ export function provideConfig() {
 
 
 @NgModule({
-   imports: [
+  imports: [
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
@@ -57,7 +59,7 @@ export function provideConfig() {
     }),
     SharedModule,
     routing,
-    SocialLoginModule
+    SocialLoginModule,
 
   ],
   declarations: [
@@ -71,17 +73,18 @@ export function provideConfig() {
     OptionsComponent,
     FooterComponent,
     ActivationHeaderComponent,
-  ], 
+  ],
   providers: [
     AppSettings,
-    AppService,   
+    AppService,
     {
       provide: AuthServiceConfig,
       useFactory: provideConfig
     },
     { provide: OverlayContainer, useClass: CustomOverlayContainer },
     { provide: MAT_MENU_SCROLL_STRATEGY, useFactory: menuScrollStrategy, deps: [Overlay] },
-    { provide: HTTP_INTERCEPTORS, useClass: AppInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AppInterceptor, multi: true },
+    { provide: ErrorHandler, useClass: GlobalErrorHandler }
   ],
   bootstrap: [AppComponent]
 })

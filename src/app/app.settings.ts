@@ -9,6 +9,6 @@ export class Settings {
 export class AppSettings {
     public settings = new Settings(
         'Maxima Ecommerce',  // theme name
-        'blue'     // green, blue, red, pink, purple, grey
+        'grey'     // green, blue, red, pink, purple, grey
     )
 }
