@@ -426,15 +426,15 @@ export class AppService {
     }
 
     public addReview(data) {
-        return this.http.post(this.localUrl + 'add-review', data);
+        return this.http.post(this.baseUrl + 'add-review', data);
     }
 
     public getProvinces() {
-        return this.http.get(this.localUrl + 'all-province');
+        return this.http.get(this.baseUrl + 'all-province');
     }
 
     public getCities(id) {
-        return this.http.get(this.localUrl + 'specific-cities/' + id);
+        return this.http.get(this.baseUrl + 'specific-cities/' + id);
     }
 
 } 
