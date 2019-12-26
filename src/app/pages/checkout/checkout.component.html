@@ -19,7 +19,7 @@
           <mat-form-field class="w-100">
             <mat-label>Province</mat-label>
             <mat-select formControlName="state" required>
-              <mat-option (onSelectionChange)="change($event)" *ngFor="let province of provinces"
+              <mat-option  (onSelectionChange)="change(province._id)" *ngFor="let province of provinces"
                 [value]="province.name">
                 {{province.name}}
               </mat-option>

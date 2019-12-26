@@ -106,14 +106,15 @@ export class CheckoutComponent implements OnInit {
   }
 
   change(event) {
-    if (event.isUserInput) {
+    console.log(event);
+    // if (event.isUserInput) {
       // console.log(event.source.value, event.source.selected);
-      this.appService.getCities(event.source.value).subscribe((res: any) => {
+      this.appService.getCities(event).subscribe((res: any) => {
         this.provinceSelected = false;
         this.cities = res.data;
         this.filteredCities = res.data;
         this.billingForm.get('city').enable()
       })
-    }
+    // }
   }
 }
