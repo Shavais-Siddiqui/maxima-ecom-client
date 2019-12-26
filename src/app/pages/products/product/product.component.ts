@@ -129,7 +129,7 @@ export class ProductComponent implements OnInit {
     this.sub.unsubscribe();
   }
 
-  public onSubmitReview(values: Object): void {
+  public onSubmitReview(): void {
     console.log(this.form.value)
     if (this.form.valid) {
       this.auth.isLoggedIn.subscribe(res => {
