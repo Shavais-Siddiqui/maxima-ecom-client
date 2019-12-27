@@ -68,10 +68,11 @@ export class SignInComponent implements OnInit {
   public onLoginFormSubmit(values: Object): void {
     if (this.loginForm.valid) {
       let loginData = {
-        email: this.loginForm.get('email'),
-        password: this.loginForm.get('password'),
+        email: this.loginForm.get('email').value,
+        password: this.loginForm.get('password').value,
         provider: 'MAIL'
       }
+      console.log(loginData)
       this.auth.login(loginData).subscribe((res: any) => {
         localStorage.setItem('token', res.token);
         this.auth.user = res.data;
@@ -97,5 +98,4 @@ export class SignInComponent implements OnInit {
   ngOnDestroy() {
 
   }
-
 }
