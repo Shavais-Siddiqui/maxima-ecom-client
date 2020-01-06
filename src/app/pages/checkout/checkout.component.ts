@@ -42,7 +42,7 @@ export class CheckoutComponent implements OnInit {
     this.billingForm = this.formBuilder.group({
       fullName: ['', Validators.required],
       phone: ['', Validators.required],
-      city: [{value:'', disabled: true}, Validators.required],
+      city: [{ value: '', disabled: true }, Validators.required],
       state: '',
       address: ['', Validators.required]
     });
@@ -82,17 +82,14 @@ export class CheckoutComponent implements OnInit {
 
   onChanges() {
     this.billingForm.controls['city'].valueChanges.subscribe(val => {
-      // console.log(val.length > 0)
       if (val.length > 0) {
         const filterValue = val.toLowerCase();
         this.filteredCities = this.cities.filter(option => {
-          // console.log(option.name);
           return option.name.toLowerCase().includes(filterValue)
         })
       } else {
         this.filteredCities = this.cities;
       }
-      // console.log(this.cities)
     })
   }
 
@@ -108,13 +105,13 @@ export class CheckoutComponent implements OnInit {
   change(event) {
     console.log(event);
     // if (event.isUserInput) {
-      // console.log(event.source.value, event.source.selected);
-      this.appService.getCities(event).subscribe((res: any) => {
-        this.provinceSelected = false;
-        this.cities = res.data;
-        this.filteredCities = res.data;
-        this.billingForm.get('city').enable()
-      })
+    // console.log(event.source.value, event.source.selected);
+    this.appService.getCities(event).subscribe((res: any) => {
+      this.provinceSelected = false;
+      this.cities = res.data;
+      this.filteredCities = res.data;
+      this.billingForm.get('city').enable()
+    })
     // }
   }
 }

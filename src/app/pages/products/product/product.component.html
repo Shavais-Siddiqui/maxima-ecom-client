@@ -7,7 +7,7 @@
         </mat-card>       
 
         <div class="small-carousel"> 
-            <div class="swiper-container" [swiper]="config">
+            <div class="swiper-container" [swiper]="sConfig">
                 <div class="swiper-wrapper"> 
                     <div *ngFor="let image of product?.images" class="swiper-slide">
                         <mat-card (click)="selectImage(image)" class="p-1">

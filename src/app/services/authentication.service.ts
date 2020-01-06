@@ -62,7 +62,7 @@ export class AuthenticationService {
   }
 
   login(data) {
-    return this.http.post(this.localUrl + 'login', data)
+    return this.http.post(this.baseUrl + 'login', data)
   }
 
   verifyEmail(id) {

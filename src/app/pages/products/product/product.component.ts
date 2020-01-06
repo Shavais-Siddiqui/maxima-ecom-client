@@ -5,7 +5,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { SwiperConfigInterface, SwiperDirective } from 'ngx-swiper-wrapper';
 import { Data, AppService } from '../../../services/app.service';
 import { Product } from "../../../app.models";
-import { emailValidator } from '../../../theme/utils/app-validators';
 import { ProductZoomComponent } from './product-zoom/product-zoom.component';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -20,7 +19,7 @@ import { NgbRatingConfig } from '@ng-bootstrap/ng-bootstrap';
 export class ProductComponent implements OnInit {
   @ViewChild('zoomViewer', { static: false }) zoomViewer;
   @ViewChild(SwiperDirective, { static: false }) directiveRef: SwiperDirective;
-  public config: SwiperConfigInterface = {};
+  public sConfig: SwiperConfigInterface = {};
   public product: Product;
   public image: any;
   public zoomImage: any;
@@ -52,7 +51,7 @@ export class ProductComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.config = {
+    this.sConfig = {
       observer: false,
       slidesPerView: 4,
       spaceBetween: 10,
@@ -79,7 +78,7 @@ export class ProductComponent implements OnInit {
       this.image = data.images[0].medium;
       this.zoomImage = data.images[0].big;
       setTimeout(() => {
-        this.config.observer = true;
+        this.sConfig.observer = true;
         // this.directiveRef.setIndex(0);
       });
     });
@@ -182,7 +181,6 @@ export class ProductComponent implements OnInit {
           }
         });
       });
-
     }
   }
 }
