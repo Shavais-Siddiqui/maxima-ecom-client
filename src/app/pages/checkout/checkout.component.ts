@@ -57,7 +57,6 @@ export class CheckoutComponent implements OnInit {
       cvv: ['', Validators.required]
     });
     this.appService.getProvinces().subscribe((res: any) => {
-      console.log(res.data)
       this.provinces = res.data;
     })
     this.onChanges();
@@ -72,9 +71,7 @@ export class CheckoutComponent implements OnInit {
   }
   private _filter(value: string) {
     const filterValue = value.toLowerCase();
-    console.log('_filter')
     return this.cities.filter(option => {
-      console.log(option);
       option.toLowerCase().includes(filterValue)
     }
     );
@@ -103,9 +100,6 @@ export class CheckoutComponent implements OnInit {
   }
 
   change(event) {
-    console.log(event);
-    // if (event.isUserInput) {
-    // console.log(event.source.value, event.source.selected);
     this.appService.getCities(event).subscribe((res: any) => {
       this.provinceSelected = false;
       this.cities = res.data;

@@ -79,7 +79,6 @@ export class AuthenticationService {
   getUserData() {
     this.http.get(this.baseUrl + 'get-data').subscribe((res: any) => {
       this.user = res.data;
-      console.log(res.data)
       this.userstatusSubject.next(res.data.active)
     })
   }

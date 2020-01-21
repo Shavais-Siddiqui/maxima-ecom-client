@@ -72,7 +72,6 @@ export class SignInComponent implements OnInit {
         password: this.loginForm.get('password').value,
         provider: 'MAIL'
       }
-      console.log(loginData)
       this.auth.login(loginData).subscribe((res: any) => {
         localStorage.setItem('token', res.token);
         this.auth.user = res.data;

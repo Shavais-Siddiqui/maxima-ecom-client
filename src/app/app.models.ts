@@ -20,7 +20,7 @@ export class Product {
     public color: Array<string>,
     public size: Array<string>,
     public weight: number,
-    public categoryId: number) { }
+    public categoryId: any) { }
 }
 
 export class User {

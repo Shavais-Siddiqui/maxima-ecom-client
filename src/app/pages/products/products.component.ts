@@ -32,7 +32,6 @@ export class ProductsComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute, public appService: AppService, public dialog: MatDialog, private router: Router) { }
 
   ngOnInit() {
-    console.log('On init')
     this.count = this.counts[0];
     this.sort = this.sortings[0];
     this.sub = this.activatedRoute.params.subscribe(params => {
@@ -69,7 +68,6 @@ export class ProductsComponent implements OnInit {
   }
 
   public getCategories() {
-    console.log(this.appService.Data.categories)
     if (this.appService.Data.categories.length == 0) {
       this.appService.getCategories().subscribe((res: any) => {
         this.categories = res.data;

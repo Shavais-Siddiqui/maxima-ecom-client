@@ -52,7 +52,6 @@ export class PagesComponent implements OnInit {
 
   public getCategories() {
     this.appService.getCategories().subscribe((res: any) => {
-      console.log(res)
       this.categories = res.data;
       this.category = res.data[0];
     })
@@ -68,10 +67,10 @@ export class PagesComponent implements OnInit {
   }
 
   public remove(product) {
-    console.log(product)
     const index: number = this.appService.Data.cartList.indexOf(product);
     if (index !== -1) {
       this.appService.Data.cartList.splice(index, 1);
+      localStorage.setItem('cartList', JSON.stringify(this.appService.Data.cartList));
       this.appService.Data.totalPrice = this.appService.Data.totalPrice - product.newPrice * product.cartCount;
       this.appService.Data.totalCartCount = this.appService.Data.totalCartCount - product.cartCount;
       this.appService.resetProductCartCount(product);
@@ -79,6 +78,7 @@ export class PagesComponent implements OnInit {
   }
 
   public clear() {
+    localStorage.removeItem('cartList');
     this.appService.Data.cartList.forEach(product => {
       this.appService.resetProductCartCount(product);
     });

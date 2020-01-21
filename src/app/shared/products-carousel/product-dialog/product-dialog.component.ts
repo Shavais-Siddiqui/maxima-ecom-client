@@ -33,7 +33,6 @@ export class ProductDialogComponent implements OnInit {
   ngOnInit() {
     this.appService.Data.cartList.forEach(product => {
       let id = Number(product._id);
-      console.log(id)
       this.total[product._id] = product.cartCount * product.newPrice;
       this.grandTotal += product.cartCount * product.newPrice;
       this.cartItemCount[product._id] = product.cartCount;
@@ -63,24 +62,19 @@ export class ProductDialogComponent implements OnInit {
   // total: this.count * this.product.newPrice
 
   public updateCart(value) {
-    console.log('inc', value)
     if (value) {
       let id = Number(value.productId);
-      console.log(id, typeof (value.productId))
       this.total[value.productId] = value.total;
       this.cartItemCount[value.productId] = value.soldQuantity;
       this.grandTotal = 0;
       // this.total.forEach(price => {
-      //   console.log('Inside total')
       //   this.grandTotal += price;
       // });
-      console.log(this.total, this.cartItemCount)
       for (let i in this.total) {
         this.grandTotal += this.total[i];
       }
       this.cartItemCountTotal = 0;
       // this.cartItemCount.forEach(count => {
-      //   console.log('Inside cart item count')
       //   this.cartItemCountTotal += count;
       // });
       for (let i in this.cartItemCount) {
@@ -89,7 +83,6 @@ export class ProductDialogComponent implements OnInit {
 
       }
 
-      console.log(this.grandTotal, this.cartItemCountTotal)
       this.appService.Data.totalPrice = this.grandTotal;
       this.appService.Data.totalCartCount = this.cartItemCountTotal;
 
@@ -101,7 +94,6 @@ export class ProductDialogComponent implements OnInit {
         // });
         for (let i in this.cartItemCount) {
           if (product._id == i) {
-            console.log(product._id, i, this.cartItemCount[i])
             product.cartCount = this.cartItemCount[i];
           }
         }
@@ -109,7 +101,6 @@ export class ProductDialogComponent implements OnInit {
       let products = JSON.parse(localStorage.getItem('cartList'));
       if (products) {
         products.map(x => {
-          console.log('Hello world', x)
         })
       }
     }

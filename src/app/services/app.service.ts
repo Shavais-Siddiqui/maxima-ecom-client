@@ -115,8 +115,6 @@ export class AppService {
             this.Data.totalPrice = this.Data.totalPrice + (product.cartCount * product.newPrice);
             this.Data.totalCartCount = this.Data.totalCartCount + product.cartCount;
         });
-
-        console.log(this.Data.cartList)
         // Add items to the localstorage
         localStorage.setItem('cartList', JSON.stringify(this.Data.cartList));
         message = 'The product ' + product.name + ' has been added to cart.';

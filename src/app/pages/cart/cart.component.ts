@@ -25,7 +25,6 @@ export class CartComponent implements OnInit {
   public updateCart(value) {
     if (value) {
       let id = Number(value.productId);
-      console.log(id, typeof (value.productId))
       this.total[value.productId] = value.total;
       this.cartItemCount[value.productId] = value.soldQuantity;
       this.grandTotal = 0;
@@ -37,14 +36,12 @@ export class CartComponent implements OnInit {
         this.cartItemCountTotal += this.cartItemCount[i];
       }
 
-      console.log(this.grandTotal, this.cartItemCountTotal)
       this.appService.Data.totalPrice = this.grandTotal;
       this.appService.Data.totalCartCount = this.cartItemCountTotal;
 
       this.appService.Data.cartList.forEach(product => {
         for (let i in this.cartItemCount) {
           if (product._id == i) {
-            console.log(product._id, i, this.cartItemCount[i])
             product.cartCount = this.cartItemCount[i];
           }
         }
@@ -52,7 +49,6 @@ export class CartComponent implements OnInit {
       // let products = JSON.parse(localStorage.getItem('cartList'));
       // if (products) {
       //   products.map(x => {
-      //     console.log('Hello world', x)
       //   })
       // }
     }

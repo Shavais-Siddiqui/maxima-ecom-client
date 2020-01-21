@@ -41,7 +41,6 @@ export class HomeComponent implements OnInit {
     if (type == "featured" && !this.featuredProducts) {
       this.appService.getProducts("featured").subscribe((res:any) => {
         this.featuredProducts = res.data;
-        console.log(res.data)
       })
     }
     if (type == "on sale" && !this.onSaleProducts) {

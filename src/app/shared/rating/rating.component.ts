@@ -28,7 +28,6 @@ export class RatingComponent implements OnInit {
     // this.ratingsCount++;
     // this.ratingsValue = this.ratingsValue + value;
     // this.calculateAvgValue();
-    console.log(value)
   }
 
   calculateAvgValue() {

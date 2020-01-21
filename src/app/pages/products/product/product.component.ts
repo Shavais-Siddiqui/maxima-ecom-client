@@ -41,7 +41,6 @@ export class ProductComponent implements OnInit {
 
   ngOnInit() {
     this.sub = this.activatedRoute.params.subscribe(params => {
-      console.log(params)
       this.productId = params['id'];
       this.getProductById(params['id']);
     });
@@ -85,7 +84,6 @@ export class ProductComponent implements OnInit {
         if (products.length > 0) {
           this.product.cartCount = products[0].cartCount;
         }
-        console.log(this.product)
       }
       this.image = res.data.images[0].medium;
       this.zoomImage = res.data.images[0].large;
@@ -141,7 +139,6 @@ export class ProductComponent implements OnInit {
   }
 
   public onSubmitReview(): void {
-    console.log(this.form.value)
     if (this.form.valid) {
       this.auth.isLoggedIn.subscribe(res => {
         if (res) {
@@ -167,14 +164,11 @@ export class ProductComponent implements OnInit {
 
   rateCount(rate) {
     this.rates = rate;
-    console.log(this.rates)
   }
 
   public updateCart(value) {
-    console.log('inc', value)
     if (value) {
       let id = Number(value.productId);
-      console.log(id, typeof (value.productId))
       this.total[value.productId] = value.total;
       this.cartItemCount[value.productId] = value.soldQuantity;
       this.grandTotal = 0;
@@ -186,14 +180,12 @@ export class ProductComponent implements OnInit {
         this.cartItemCountTotal += this.cartItemCount[i];
       }
 
-      console.log(this.grandTotal, this.cartItemCountTotal)
       this.appService.Data.totalPrice = this.grandTotal;
       this.appService.Data.totalCartCount = this.cartItemCountTotal;
 
       this.appService.Data.cartList.forEach(product => {
         for (let i in this.cartItemCount) {
           if (product._id == i) {
-            console.log(product._id, i, this.cartItemCount[i])
             product.cartCount = this.cartItemCount[i];
           }
         }
