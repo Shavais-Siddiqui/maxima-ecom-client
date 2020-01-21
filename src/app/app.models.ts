@@ -20,7 +20,8 @@ export class Product {
     public color: Array<string>,
     public size: Array<string>,
     public weight: number,
-    public categoryId: any) { }
+    public categoryId: any,
+    public reviews: Array<any>) { }
 }
 
 export class User {
