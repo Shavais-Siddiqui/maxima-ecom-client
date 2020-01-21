@@ -18,6 +18,7 @@ export class PagesComponent implements OnInit {
   public categories: Category[];
   public category: Category;
   public sidenavMenuItems: Array<any>;
+  userActiveStatus = true;
   @ViewChild('sidenav', { static: false }) sidenav: any;
 
   public settings: Settings;
@@ -30,6 +31,9 @@ export class PagesComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.auth.isUserActive.subscribe((res: any) => {
+      this.userActiveStatus = res;
+    })
     let cartList = JSON.parse(localStorage.getItem('cartList'));
     if (cartList) {
       this.appService.Data.cartList = cartList;
@@ -38,15 +42,19 @@ export class PagesComponent implements OnInit {
         this.appService.Data.totalCartCount = this.appService.Data.totalCartCount + product.cartCount;
       });
     }
+    let wishList = JSON.parse(localStorage.getItem('wishList'))
+    if (wishList) {
+      this.appService.Data.wishList = wishList;
+    }
     this.getCategories();
     this.sidenavMenuItems = this.sidenavMenuService.getSidenavMenuItems();
   }
 
   public getCategories() {
-    this.appService.getCategories().subscribe(data => {
-      this.categories = data;
-      this.category = data[0];
-      this.appService.Data.categories = data;
+    this.appService.getCategories().subscribe((res: any) => {
+      console.log(res)
+      this.categories = res.data;
+      this.category = res.data[0];
     })
   }
 
@@ -60,6 +68,7 @@ export class PagesComponent implements OnInit {
   }
 
   public remove(product) {
+    console.log(product)
     const index: number = this.appService.Data.cartList.indexOf(product);
     if (index !== -1) {
       this.appService.Data.cartList.splice(index, 1);
@@ -125,5 +134,4 @@ export class PagesComponent implements OnInit {
       this.sidenavMenuService.closeAllSubMenus();
     }
   }
-
 }

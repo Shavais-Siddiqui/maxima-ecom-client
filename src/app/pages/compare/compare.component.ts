@@ -15,7 +15,7 @@ export class CompareComponent implements OnInit {
   ngOnInit() { 
     this.appService.Data.cartList.forEach(cartProduct=>{
       this.appService.Data.compareList.forEach(product=>{
-        if(cartProduct.id == product.id){
+        if(cartProduct._id == product._id){
           product.cartCount = cartProduct.cartCount;
         }
       });

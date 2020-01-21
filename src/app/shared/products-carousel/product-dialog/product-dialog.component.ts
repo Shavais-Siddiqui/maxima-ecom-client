@@ -12,9 +12,9 @@ import { Product } from '../../../app.models';
 })
 export class ProductDialogComponent implements OnInit {
   public config: SwiperConfigInterface = {};
-  total = [];
+  total = {};
   grandTotal = 0;
-  cartItemCount = [];
+  cartItemCount = {};
   cartItemCountTotal = 0;
   constructor(public appService: AppService,
     public dialogRef: MatDialogRef<ProductDialogComponent>,
@@ -22,10 +22,9 @@ export class ProductDialogComponent implements OnInit {
     let localProducts = JSON.parse(localStorage.getItem('cartList'));
     if (localProducts) {
       let products = localProducts.filter(x => {
-        return x.id == this.product.id
+        return x._id == this.product._id
       })
       if (products.length > 0) {
-        console.log(products)
         this.product = products[0]
       }
     }
@@ -33,9 +32,11 @@ export class ProductDialogComponent implements OnInit {
 
   ngOnInit() {
     this.appService.Data.cartList.forEach(product => {
-      this.total[product.id] = product.cartCount * product.newPrice;
+      let id = Number(product._id);
+      console.log(id)
+      this.total[product._id] = product.cartCount * product.newPrice;
       this.grandTotal += product.cartCount * product.newPrice;
-      this.cartItemCount[product.id] = product.cartCount;
+      this.cartItemCount[product._id] = product.cartCount;
       this.cartItemCountTotal += product.cartCount;
     })
   }
@@ -57,33 +58,53 @@ export class ProductDialogComponent implements OnInit {
       }
     }
   }
-  // productId: this.product.id,
+  // productId: this.product._id,
   // soldQuantity: this.count,
   // total: this.count * this.product.newPrice
 
   public updateCart(value) {
     console.log('inc', value)
     if (value) {
+      let id = Number(value.productId);
+      console.log(id, typeof (value.productId))
       this.total[value.productId] = value.total;
       this.cartItemCount[value.productId] = value.soldQuantity;
       this.grandTotal = 0;
-      this.total.forEach(price => {
-        this.grandTotal += price;
-      });
+      // this.total.forEach(price => {
+      //   console.log('Inside total')
+      //   this.grandTotal += price;
+      // });
+      console.log(this.total, this.cartItemCount)
+      for (let i in this.total) {
+        this.grandTotal += this.total[i];
+      }
       this.cartItemCountTotal = 0;
-      this.cartItemCount.forEach(count => {
-        this.cartItemCountTotal += count;
-      });
+      // this.cartItemCount.forEach(count => {
+      //   console.log('Inside cart item count')
+      //   this.cartItemCountTotal += count;
+      // });
+      for (let i in this.cartItemCount) {
+        // this.grandTotal += this.cartItemCount[i];
+        this.cartItemCountTotal += this.cartItemCount[i];
 
+      }
+
+      console.log(this.grandTotal, this.cartItemCountTotal)
       this.appService.Data.totalPrice = this.grandTotal;
       this.appService.Data.totalCartCount = this.cartItemCountTotal;
 
       this.appService.Data.cartList.forEach(product => {
-        this.cartItemCount.forEach((count, index) => {
-          if (product.id == index) {
-            product.cartCount = count;
+        // this.cartItemCount.forEach((count, index) => {
+        //   if (product._id == index.toString()) {
+        //     product.cartCount = count;
+        //   }
+        // });
+        for (let i in this.cartItemCount) {
+          if (product._id == i) {
+            console.log(product._id, i, this.cartItemCount[i])
+            product.cartCount = this.cartItemCount[i];
           }
-        });
+        }
       });
       let products = JSON.parse(localStorage.getItem('cartList'));
       if (products) {

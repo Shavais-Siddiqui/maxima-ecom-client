@@ -5,12 +5,12 @@
                 <mat-chip-list *ngIf="product.discount">
                     <mat-chip color="warn" selected="true">{{product.discount}}% OFF</mat-chip>
                 </mat-chip-list>
-                <a [routerLink]="['/products', product.id, product.name]" class="image-link">
+                <a [routerLink]="['/products', product._id, product.name]" class="image-link">
                     <img [attr.data-src]="product.images[0].medium" class="swiper-lazy"/>
                     <div class="swiper-lazy-preloader"></div>
                 </a>
-                <h4 class="category text-muted">{{ ( appService.Data.categories | filterById : product.categoryId )?.name }}</h4>                                                                     
-                <a [routerLink]="['/products', product.id, product.name]" class="title text-truncate">
+                <h4 class="category text-muted">{{product.categoryId.name}}</h4>                                                                     
+                <a [routerLink]="['/products', product._id, product.name]" class="title text-truncate">
                     {{product.name}}
                 </a>
                 <div fxLayout="row" fxLayoutAlign="space-between center" class="prices">

@@ -42,28 +42,29 @@ export class ControlsComponent implements OnInit {
   }
 
   public increment(count) {
-    console.log('Incre caled!')
-    if (this.product.cartCount < 1 && this.count < this.product.availibilityCount) {
-      console.log('Incre2 caled!')
+    if (!this.product.cartCount && this.count < this.product.availibilityCount) {
+      // Item added without clicking on add to cart!
       this.count++;
     } else {
       if (this.count < this.product.availibilityCount) {
         this.count++;
         let obj = {
-          productId: this.product.id,
+          productId: this.product._id,
           soldQuantity: this.count,
           total: this.count * this.product.newPrice
         }
+
+        // Set local storage after increment // 
         let products = JSON.parse(localStorage.getItem('cartList'));
         if (products) {
           products.map(x => {
-            if (x.id == this.product.id) {
+            if (x._id == this.product._id) {
               x.cartCount = this.count;
             }
           })
           localStorage.setItem('cartList', JSON.stringify(products));
         }
-        console.log('Update caled!')
+
         this.changeQuantity(obj);
       }
       else {
@@ -76,14 +77,14 @@ export class ControlsComponent implements OnInit {
     if (this.count > 1) {
       this.count--;
       let obj = {
-        productId: this.product.id,
+        productId: this.product._id,
         soldQuantity: this.count,
         total: this.count * this.product.newPrice
       }
       let products = JSON.parse(localStorage.getItem('cartList'));
       if (products) {
         products.map(x => {
-          if (x.id == this.product.id) {
+          if (x._id == this.product._id) {
             x.cartCount = this.count;
           }
         })
@@ -98,22 +99,24 @@ export class ControlsComponent implements OnInit {
   }
 
   public addToWishList(product: Product) {
+    let currentProduct = this.appService.Data.cartList.filter(item => item._id == product._id)[0];
+    if (currentProduct) {
+      return this.snackBar.open('This product present in your cart.', '×', { panelClass: 'error', verticalPosition: 'top', duration: 5000 });
+    }
     this.appService.addToWishList(product);
   }
 
   public addToCart(product: Product) {
-    let currentProduct = this.appService.Data.cartList.filter(item => item.id == product.id)[0];
+    let currentProduct = this.appService.Data.cartList.filter(item => item._id == product._id)[0];
     if (currentProduct) {
       if (currentProduct.cartCount > 0) {
         return this.snackBar.open('You already added this item in the cart.', '×', { panelClass: 'error', verticalPosition: 'top', duration: 5000 });
-
       }
       if ((currentProduct.cartCount + this.count) <= this.product.availibilityCount) {
         product.cartCount = currentProduct.cartCount + this.count;
       }
       else {
-        this.snackBar.open('You can not add more items than available. In stock ' + this.product.availibilityCount + ' items and you already added ' + currentProduct.cartCount + ' item to your cart', '×', { panelClass: 'error', verticalPosition: 'top', duration: 5000 });
-        return false;
+        return this.snackBar.open('You can not add more items than available. In stock ' + this.product.availibilityCount + ' items and you already added ' + currentProduct.cartCount + ' item to your cart', '×', { panelClass: 'error', verticalPosition: 'top', duration: 5000 });
       }
     }
     else {

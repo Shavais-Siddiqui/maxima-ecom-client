@@ -15,7 +15,9 @@ export class AuthenticationService {
   public baseUrl = 'https://maximaecommerceserver.herokuapp.com/api/'
   public localUrl = 'http://localhost:3000/api/';
   public verified;
+  public userstatusSubject;
   public user;
+  public isUserActive;
 
   constructor(private authService: AuthService, private http: HttpClient) {
     // Get token and verify its expiry
@@ -32,8 +34,9 @@ export class AuthenticationService {
     this.isLoggedIn = this.loggedIn.asObservable();
 
     // Verified
-    // this.verified = new BehaviorSubject<boolean>(true);
-    // this.isLoggedIn = this.loggedIn.asObservable();
+    this.userstatusSubject = new BehaviorSubject<boolean>(true);
+    this.isUserActive = this.userstatusSubject.asObservable();
+    
   }
 
   initialStatus() {
@@ -41,6 +44,10 @@ export class AuthenticationService {
 
   updateLoggedInStatus(loggedIn: boolean) {
     this.loggedIn.next(loggedIn);
+  }
+
+  updateActiveState(val) {
+    this.userstatusSubject.next(val);
   }
 
   async signOut() {
@@ -72,7 +79,8 @@ export class AuthenticationService {
   getUserData() {
     this.http.get(this.baseUrl + 'get-data').subscribe((res: any) => {
       this.user = res.data;
+      console.log(res.data)
+      this.userstatusSubject.next(res.data.active)
     })
   }
-
 }

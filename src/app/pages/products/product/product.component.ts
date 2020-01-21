@@ -27,12 +27,13 @@ export class ProductComponent implements OnInit {
   public form: FormGroup;
   public relatedProducts: Array<Product>;
 
-  total = [];
+  total = {};
   grandTotal = 0;
-  cartItemCount = [];
+  cartItemCount = {};
   cartItemCountTotal = 0;
   productId;
   rates;
+  readonly = true;
   constructor(public appService: AppService, private activatedRoute: ActivatedRoute, public dialog: MatDialog, public formBuilder: FormBuilder, public auth: AuthenticationService, public snackBar: MatSnackBar, config: NgbRatingConfig) {
     config.max = 5;
     config.readonly = false;
@@ -40,6 +41,7 @@ export class ProductComponent implements OnInit {
 
   ngOnInit() {
     this.sub = this.activatedRoute.params.subscribe(params => {
+      console.log(params)
       this.productId = params['id'];
       this.getProductById(params['id']);
     });
@@ -73,10 +75,20 @@ export class ProductComponent implements OnInit {
   }
 
   public getProductById(id) {
-    this.appService.getProductById(id).subscribe(data => {
-      this.product = data;
-      this.image = data.images[0].medium;
-      this.zoomImage = data.images[0].big;
+    this.appService.getProductById(id).subscribe((res: any) => {
+      this.product = res.data;
+      let localProducts = JSON.parse(localStorage.getItem('cartList'));
+      if (localProducts) {
+        let products = localProducts.filter(x => {
+          return x._id == res.data._id
+        })
+        if (products.length > 0) {
+          this.product.cartCount = products[0].cartCount;
+        }
+        console.log(this.product)
+      }
+      this.image = res.data.images[0].medium;
+      this.zoomImage = res.data.images[0].large;
       setTimeout(() => {
         this.sConfig.observer = true;
         // this.directiveRef.setIndex(0);
@@ -85,14 +97,14 @@ export class ProductComponent implements OnInit {
   }
 
   public getRelatedProducts() {
-    this.appService.getProducts('related').subscribe(data => {
-      this.relatedProducts = data;
+    this.appService.getProducts('related').subscribe((res: any) => {
+      this.relatedProducts = res.data;
     })
   }
 
   public selectImage(image) {
     this.image = image.medium;
-    this.zoomImage = image.big;
+    this.zoomImage = image.large;
   }
 
   public onMouseMove(e) {
@@ -135,7 +147,8 @@ export class ProductComponent implements OnInit {
         if (res) {
           // Add Review
           let data = {
-            userId: this.auth.user.id,
+            userId: this.auth.user._id,
+            userName: this.auth.user.name,
             productId: this.productId,
             rate: this.form.get('rate').value,
             reviewText: this.form.get('review').value
@@ -158,29 +171,39 @@ export class ProductComponent implements OnInit {
   }
 
   public updateCart(value) {
-    console.log('Hello', value)
+    console.log('inc', value)
     if (value) {
+      let id = Number(value.productId);
+      console.log(id, typeof (value.productId))
       this.total[value.productId] = value.total;
       this.cartItemCount[value.productId] = value.soldQuantity;
       this.grandTotal = 0;
-      this.total.forEach(price => {
-        this.grandTotal += price;
-      });
+      for (let i in this.total) {
+        this.grandTotal += this.total[i];
+      }
       this.cartItemCountTotal = 0;
-      this.cartItemCount.forEach(count => {
-        this.cartItemCountTotal += count;
-      });
+      for (let i in this.cartItemCount) {
+        this.cartItemCountTotal += this.cartItemCount[i];
+      }
 
+      console.log(this.grandTotal, this.cartItemCountTotal)
       this.appService.Data.totalPrice = this.grandTotal;
       this.appService.Data.totalCartCount = this.cartItemCountTotal;
 
       this.appService.Data.cartList.forEach(product => {
-        this.cartItemCount.forEach((count, index) => {
-          if (product.id == index) {
-            product.cartCount = count;
+        for (let i in this.cartItemCount) {
+          if (product._id == i) {
+            console.log(product._id, i, this.cartItemCount[i])
+            product.cartCount = this.cartItemCount[i];
           }
-        });
+        }
       });
+      // let products = JSON.parse(localStorage.getItem('cartList'));
+      // if (products) {
+      //   products.map(x => {
+      //     console.log('Hello world', x)
+      //   })
+      // }
     }
   }
 }

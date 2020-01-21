@@ -31,7 +31,7 @@
 
         <h2>{{product?.name}}</h2>
         <div class="py-1 lh">
-            <p><span class="text-muted fw-500">Category: </span><span>{{ ( appService.Data.categories | filterById : product?.categoryId )?.name }}</span></p>
+            <p><span class="text-muted fw-500">Category: </span><span>{{ ( appService.Data.categories | filterById : product?.categoryId )?.name}}</span></p>
             <p><span class="text-muted fw-500">Availibility: </span><span>{{ (product?.availibilityCount > 0) ? 'In stock':'Unavailable'}}</span></p>
         </div>                 
         <div class="py-1">
@@ -53,7 +53,7 @@
             </div>
         </div>
 
-        <div class="py-1">
+        <div class="py-1" *ngIf = "product">
             <app-controls [product]="product" [type]="'all'" (onQuantityChange)="updateCart($event)"></app-controls> 
         </div>
 
@@ -159,7 +159,7 @@
                         <p class="mt-2 text-muted">Your email address will not be published.</p>
                         <form [formGroup]="form" fxLayout="row wrap">
                         <h3 fxLayoutAlign="start center" class="mt-2">
-                            <span>Your Rating:</span>
+                            <span>Your Rating:</span>&nbsp;
                             <!-- <button mat-icon-button (click) = "rateCount(1)" matTooltip="Very Dissatisfied" matTooltipPosition="above"><mat-icon class="mat-icon-lg">sentiment_very_dissatisfied</mat-icon></button>
                             <button mat-icon-button (click) = "rateCount(2)" matTooltip="Dissatisfied" matTooltipPosition="above"><mat-icon class="mat-icon-lg">sentiment_dissatisfied</mat-icon></button>
                             <button mat-icon-button (click) = "rateCount(3)" matTooltip="Neutral" matTooltipPosition="above"><mat-icon class="mat-icon-lg">sentiment_neutral</mat-icon></button>
@@ -197,33 +197,20 @@
                             </div>
                         </form>
 
-                        <mat-list class="reviews">
-                            <mat-list-item class="h-100 py-1">
+                        <mat-list class="reviews" *ngIf = "product?.reviews.length > 0">
+                            <mat-list-item *ngFor = "let review of product?.reviews" class="h-100 py-1">
                                 <img matListAvatar [src]="'assets/images/avatars/avatar-1.png'" alt="image" class="review-author">
                                 <p matLine fxLayoutAlign="start center">
-                                    <span class="fw-500">Bruno Vespa</span> 
-                                    <mat-icon class="text-muted px-1" matTooltip="Dissatisfied" matTooltipPosition="after">sentiment_dissatisfied</mat-icon>
+                                    <span class="fw-500">{{review.userName}}</span>&nbsp;
+                                    <!-- <mat-icon class="text-muted px-1" matTooltip="Dissatisfied" matTooltipPosition="after">sentiment_dissatisfied</mat-icon> -->
+                                    <ngb-rating [(rate)]="review.rate" [readonly]="readonly">
+                                        <ng-template  let-fill="fill" let-index="index">
+                                            <span class="star" [class.filled]="fill === 100" [class.bad]="index < 3">&#9733;</span>
+                                          </ng-template>
+                                    </ngb-rating>
                                 </p>
-                                <p matLine class="text-muted"><small>13 January, 2018 at 7:09</small></p>
-                                <p matLine class="text">Integer id eros et mi fringilla imperdiet. In dictum turpis eget magna viverra condimentum. Ut malesuada interdum ultrices. Proin tristique sem pellentesque, posuere dui in, maximus magna. Aenean vehicula, tortor gravida elementum tincidunt, justo lorem vestibulum ex, eget egestas arcu tellus in magna.</p>
-                            </mat-list-item>
-                            <mat-list-item class="h-100 py-1">
-                                <img matListAvatar [src]="'assets/images/avatars/avatar-2.png'" alt="image" class="review-author">
-                                <p matLine fxLayoutAlign="start center">
-                                    <span class="fw-500">Julia Aniston</span> 
-                                    <mat-icon class="text-muted px-1" matTooltip="Very Satisfied" matTooltipPosition="after">sentiment_very_satisfied</mat-icon>
-                                </p>
-                                <p matLine class="text-muted"><small>04 February, 2018 at 10:22</small></p>
-                                <p matLine class="text">Nulla accumsan, lacus sed suscipit rutrum, turpis augue accumsan metus, in accumsan urna mi vehicula lorem. Pellentesque semper nibh vitae augue placerat finibus. Nulla sed porttitor nunc, quis tristique sem. Quisque in varius nisl. Integer turpis lorem, ultricies sed sem nec, commodo molestie arcu. Nulla finibus ex tortor, et suscipit magna semper consectetur. Cras sit amet metus dui. Maecenas eget dui at ex varius malesuada vel non felis.</p>
-                            </mat-list-item>
-                            <mat-list-item class="h-100 py-1">
-                                <img matListAvatar [src]="'assets/images/avatars/avatar-3.png'" alt="image" class="review-author">
-                                <p matLine fxLayoutAlign="start center">
-                                    <span class="fw-500">Andy Warhol</span> 
-                                    <mat-icon class="text-muted px-1" matTooltip="Neutral" matTooltipPosition="after">sentiment_neutral</mat-icon>
-                                </p>
-                                <p matLine class="text-muted"><small>14 February, 2018 at 11:10</small></p>
-                                <p matLine class="text">Pellentesque hendrerit vel turpis aliquam placerat. Suspendisse ullamcorper congue feugiat. Etiam gravida metus ac massa posuere venenatis. Pellentesque vehicula lobortis dolor, ac pretium dolor maximus quis. Fusce vitae iaculis mauris, quis posuere ex. Mauris vitae convallis nibh. Etiam eget enim at orci interdum maximus nec in ante.</p>
+                                <p matLine class="text-muted"><small>{{review.date  | date:'medium'}}</small></p>
+                                <p matLine class="text">{{review.reviewText}}</p>
                             </mat-list-item>
                         </mat-list>
                         

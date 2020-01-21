@@ -60,7 +60,7 @@ export class ProductsCarouselComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(product => {
       if(product){
-        this.router.navigate(['/products', product.id, product.name]); 
+        this.router.navigate(['/products', product._id, product.name]); 
       }
     });
   }

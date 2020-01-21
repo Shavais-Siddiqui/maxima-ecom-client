@@ -26,19 +26,23 @@ export class AppService {
     public url = "assets/data/";
     public baseUrl = 'https://maximaecommerceserver.herokuapp.com/api/'
     public localUrl = 'http://localhost:3000/api/';
-    constructor(public http: HttpClient, public snackBar: MatSnackBar) { }
-
-    public getCategories(): Observable<Category[]> {
-        return this.http.get<Category[]>(this.url + 'categories.json');
+    constructor(public http: HttpClient, public snackBar: MatSnackBar) {
+        this.getCategories().subscribe((res: any) => {
+            this.Data.categories = res.data;
+        });
     }
 
-    public getProducts(type): Observable<Product[]> {
-        return this.http.get<Product[]>(this.url + type + '-products.json');
-    }
+    // public getCategories(): Observable<Category[]> {
+    //     return this.http.get<Category[]>(this.url + 'categories.json');
+    // }
 
-    public getProductById(id): Observable<Product> {
-        return this.http.get<Product>(this.url + 'product-' + id + '.json');
-    }
+    // public getProducts(type): Observable<Product[]> {
+    //     return this.http.get<Product[]>(this.url + type + '-products.json');
+    // }
+
+    // public getProductById(id): Observable<Product> {
+    //     return this.http.get<Product>(this.url + 'product-' + id + '.json');
+    // }
 
     public getBanners(): Observable<any[]> {
         return this.http.get<any[]>(this.url + 'banners.json');
@@ -46,7 +50,7 @@ export class AppService {
 
     public addToCompare(product: Product) {
         let message, status;
-        if (this.Data.compareList.filter(item => item.id == product.id)[0]) {
+        if (this.Data.compareList.filter(item => item._id == product._id)[0]) {
             message = 'The product ' + product.name + ' already added to comparison list.';
             status = 'error';
         }
@@ -60,12 +64,13 @@ export class AppService {
 
     public addToWishList(product: Product) {
         let message, status;
-        if (this.Data.wishList.filter(item => item.id == product.id)[0]) {
+        if (this.Data.wishList.filter(item => item._id == product._id)[0]) {
             message = 'The product ' + product.name + ' already added to wish list.';
             status = 'error';
         }
         else {
             this.Data.wishList.push(product);
+            localStorage.setItem('wishList', JSON.stringify(this.Data.wishList));
             message = 'The product ' + product.name + ' has been added to wish list.';
             status = 'success';
         }
@@ -74,7 +79,7 @@ export class AppService {
 
     // public addToCart(product:Product){
     //     let message, status;
-    //     if(this.Data.cartList.filter(item=>item.id == product.id)[0]){
+    //     if(this.Data.cartList.filter(item=>item._id == product._id)[0]){
     //         message = 'The product ' + product.name + ' already added to cart.'; 
     //         status = 'error'; 
     //     }
@@ -99,8 +104,8 @@ export class AppService {
         this.Data.totalPrice = null;
         this.Data.totalCartCount = null;
 
-        if (this.Data.cartList.filter(item => item.id == product.id)[0]) {
-            let item = this.Data.cartList.filter(item => item.id == product.id)[0];
+        let item = this.Data.cartList.filter(item => item._id == product._id)[0];
+        if (item) {
             item.cartCount = product.cartCount;
         }
         else {
@@ -112,6 +117,7 @@ export class AppService {
         });
 
         console.log(this.Data.cartList)
+        // Add items to the localstorage
         localStorage.setItem('cartList', JSON.stringify(this.Data.cartList));
         message = 'The product ' + product.name + ' has been added to cart.';
         status = 'success';
@@ -120,11 +126,11 @@ export class AppService {
 
     public resetProductCartCount(product: Product) {
         product.cartCount = 0;
-        let compareProduct = this.Data.compareList.filter(item => item.id == product.id)[0];
+        let compareProduct = this.Data.compareList.filter(item => item._id == product._id)[0];
         if (compareProduct) {
             compareProduct.cartCount = 0;
         };
-        let wishProduct = this.Data.wishList.filter(item => item.id == product.id)[0];
+        let wishProduct = this.Data.wishList.filter(item => item._id == product._id)[0];
         if (wishProduct) {
             wishProduct.cartCount = 0;
         };
@@ -425,6 +431,10 @@ export class AppService {
         ]
     }
 
+    public getCategories() {
+        return this.http.get(this.baseUrl + 'all-categories');
+    }
+
     public addReview(data) {
         return this.http.post(this.baseUrl + 'add-review', data);
     }
@@ -435,6 +445,21 @@ export class AppService {
 
     public getCities(id) {
         return this.http.get(this.baseUrl + 'specific-cities/' + id);
+    }
+
+    public getProducts(id) {
+        return this.http.get(this.baseUrl + 'all-products');
+    }
+
+    public getSpecificProducts(name) {
+        let obj = this.Data.categories.filter((obj: any) => {
+            return obj.name.toLowerCase() == name.toLowerCase()
+        })
+        return this.http.get(this.baseUrl + 'specific-products/' + obj[0]._id);
+    }
+
+    public getProductById(id): Observable<Product> {
+        return this.http.get<Product>(this.baseUrl + 'detail-product/' + id);
     }
 
 } 

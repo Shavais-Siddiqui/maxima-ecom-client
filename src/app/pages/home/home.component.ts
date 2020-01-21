@@ -25,7 +25,7 @@ export class HomeComponent implements OnInit {
   public newArrivalsProducts: Array<Product>;
 
 
-  constructor(public appService:AppService) { }
+  constructor(public appService: AppService) { }
 
   ngOnInit() {
     this.getBanners();
@@ -33,41 +33,41 @@ export class HomeComponent implements OnInit {
     this.getBrands();
   }
 
-  public onLinkClick(e){
-    this.getProducts(e.tab.textLabel.toLowerCase()); 
+  public onLinkClick(e) {
+    this.getProducts(e.tab.textLabel.toLowerCase());
   }
 
-  public getProducts(type){
-    if(type == "featured" && !this.featuredProducts){
-      this.appService.getProducts("featured").subscribe(data=>{
-        this.featuredProducts = data;      
-      }) 
-    }
-    if(type == "on sale" && !this.onSaleProducts){
-      this.appService.getProducts("on-sale").subscribe(data=>{
-        this.onSaleProducts = data;      
+  public getProducts(type) {
+    if (type == "featured" && !this.featuredProducts) {
+      this.appService.getProducts("featured").subscribe((res:any) => {
+        this.featuredProducts = res.data;
+        console.log(res.data)
       })
     }
-    if(type == "top rated" && !this.topRatedProducts){
-      this.appService.getProducts("top-rated").subscribe(data=>{
-        this.topRatedProducts = data;      
+    if (type == "on sale" && !this.onSaleProducts) {
+      this.appService.getProducts("on-sale").subscribe((res: any) => {
+        this.onSaleProducts = res.data;
       })
     }
-    if(type == "new arrivals" && !this.newArrivalsProducts){
-      this.appService.getProducts("new-arrivals").subscribe(data=>{
-        this.newArrivalsProducts = data;      
+    if (type == "top rated" && !this.topRatedProducts) {
+      this.appService.getProducts("top-rated").subscribe((res: any) => {
+        this.topRatedProducts = res.data;
       })
     }
-   
+    if (type == "new arrivals" && !this.newArrivalsProducts) {
+      this.appService.getProducts("new-arrivals").subscribe((res: any) => {
+        this.newArrivalsProducts = res.data;
+      })
+    }
   }
 
-  public getBanners(){
-    this.appService.getBanners().subscribe(data=>{
+  public getBanners() {
+    this.appService.getBanners().subscribe(data => {
       this.banners = data;
     })
   }
 
-  public getBrands(){
+  public getBrands() {
     this.brands = this.appService.getBrands();
   }
 

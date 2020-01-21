@@ -169,7 +169,7 @@
 
     <div class="theme-container main">
         <span *ngIf="auth.isLoggedIn | async">
-            <app-activation-header *ngIf = "!auth.user?.active"></app-activation-header>
+            <app-activation-header *ngIf = "!userActiveStatus"></app-activation-header>
         </span>
         <app-breadcrumb></app-breadcrumb>
         <router-outlet></router-outlet>

@@ -5,6 +5,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class FilterByIdPipe implements PipeTransform {
   transform(items:Array<any>, id?) {
-    return items.filter(item => item.id == id)[0];
+    return items.filter(item => item._id == id)[0];
   }
 }
