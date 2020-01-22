@@ -434,7 +434,7 @@ export class AppService {
     }
 
     public addReview(data) {
-        return this.http.post(this.baseUrl + 'add-review', data);
+        return this.http.post(this.localUrl + 'add-review', data);
     }
 
     public getProvinces() {

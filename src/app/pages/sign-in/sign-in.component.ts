@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { emailValidator, matchingPasswords } from '../../theme/utils/app-validators';
@@ -17,12 +17,12 @@ import { Subscription } from 'rxjs';
 export class SignInComponent implements OnInit {
   loginForm: FormGroup;
   registerForm: FormGroup;
-
+  returnUrl: string;
   private user: SocialUser;
   private loggedIn: boolean;
   private subscription: Subscription = new Subscription();
 
-  constructor(public formBuilder: FormBuilder, public router: Router, public snackBar: MatSnackBar, public authService: AuthService, public auth: AuthenticationService) {
+  constructor(private route: ActivatedRoute, public formBuilder: FormBuilder, public router: Router, public snackBar: MatSnackBar, public authService: AuthService, public auth: AuthenticationService) {
     let token = localStorage.getItem('token');
     if (token) {
       this.router.navigate(['/']);
@@ -30,7 +30,7 @@ export class SignInComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    this.returnUrl = JSON.parse(localStorage.getItem('returnUrl')) || '/';
     this.authService.authState.subscribe((user) => {
       this.user = user;
       this.loggedIn = (user != null);
@@ -77,7 +77,8 @@ export class SignInComponent implements OnInit {
         this.auth.user = res.data;
         this.auth.updateLoggedInStatus(true);
         this.snackBar.open('Welcome again!.', '×', { panelClass: 'success', verticalPosition: 'top', duration: 3000 });
-        this.router.navigate(['/']);
+        this.router.navigateByUrl(this.returnUrl);
+        localStorage.removeItem('returnUrl')
       })
     }
   }

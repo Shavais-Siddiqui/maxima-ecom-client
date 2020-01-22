@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterStateSnapshot } from '@angular/router';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { SwiperConfigInterface, SwiperDirective } from 'ngx-swiper-wrapper';
@@ -24,6 +24,7 @@ export class ProductComponent implements OnInit {
   public image: any;
   public zoomImage: any;
   private sub: any;
+  private sub2: any;
   public form: FormGroup;
   public relatedProducts: Array<Product>;
 
@@ -32,6 +33,7 @@ export class ProductComponent implements OnInit {
   cartItemCount = {};
   cartItemCountTotal = 0;
   productId;
+  productName;
   rates;
   readonly = true;
   constructor(public appService: AppService, private activatedRoute: ActivatedRoute, public dialog: MatDialog, public formBuilder: FormBuilder, public auth: AuthenticationService, public snackBar: MatSnackBar, config: NgbRatingConfig) {
@@ -42,6 +44,7 @@ export class ProductComponent implements OnInit {
   ngOnInit() {
     this.sub = this.activatedRoute.params.subscribe(params => {
       this.productId = params['id'];
+      this.productName = params['name'];
       this.getProductById(params['id']);
     });
     this.form = this.formBuilder.group({
@@ -136,11 +139,12 @@ export class ProductComponent implements OnInit {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+    this.sub2.unsubscribe();
   }
 
   public onSubmitReview(): void {
     if (this.form.valid) {
-      this.auth.isLoggedIn.subscribe(res => {
+      this.sub2 = this.auth.isLoggedIn.subscribe(res => {
         if (res) {
           // Add Review
           let data = {
@@ -148,12 +152,15 @@ export class ProductComponent implements OnInit {
             userName: this.auth.user.name,
             productId: this.productId,
             rate: this.form.get('rate').value,
-            reviewText: this.form.get('review').value
+            reviewText: this.form.get('review').value,
+            imageUrl: this.auth.user.imageUrl
           };
           this.appService.addReview(data).subscribe((res: any) => {
             this.snackBar.open('Thanks For Your Review', '×', { panelClass: 'success', verticalPosition: 'top', duration: 5000 });
+            location.reload();
           })
         } else {
+          localStorage.setItem('returnUrl', JSON.stringify('/products/' + this.productId + '/' + this.productName));
           this.snackBar.open('Please Login To Continue', '×', { panelClass: 'error', verticalPosition: 'top', duration: 3000 });
         }
       })

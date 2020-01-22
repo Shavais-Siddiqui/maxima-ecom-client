@@ -178,20 +178,6 @@
                                     <mat-error *ngIf="form.controls.review.errors?.required">Review is required</mat-error>
                                 </mat-form-field>
                             </div>
-                            <!-- <div fxFlex="100" fxFlex.gt-sm="50" class="px-1 mt-2">
-                                <mat-form-field class="w-100">
-                                    <input matInput placeholder="Your name" formControlName="name" required>
-                                    <mat-error *ngIf="form.controls.name.errors?.required">Name is required</mat-error>
-                                    <mat-error *ngIf="form.controls.name.hasError('minlength')">Name isn't long enough, minimum of 4 characters</mat-error>
-                                </mat-form-field> 
-                            </div>
-                            <div fxFlex="100" fxFlex.gt-sm="50" class="px-1 mt-2">
-                                <mat-form-field class="w-100">
-                                    <input matInput placeholder="Your email" formControlName="email" required>
-                                    <mat-error *ngIf="form.controls.email.errors?.required">Email is required</mat-error>
-                                    <mat-error *ngIf="form.controls.email.hasError('invalidEmail')">Invalid email address</mat-error>
-                                </mat-form-field> 
-                            </div> -->
                             <div fxFlex="100" class="mt-2 text-center w-100">
                                 <button mat-raised-button color="primary" type="submit" (click) = "onSubmitReview()" >SUBMIT REVIEW</button>
                             </div>
@@ -199,7 +185,8 @@
 
                         <mat-list class="reviews" *ngIf = "product?.reviews.length > 0">
                             <mat-list-item *ngFor = "let review of product?.reviews" class="h-100 py-1">
-                                <img matListAvatar [src]="'assets/images/avatars/avatar-1.png'" alt="image" class="review-author">
+                                <!-- <img matListAvatar [src]="'assets/images/avatars/avatar-1.png'" alt="image" class="review-author"> -->
+                                <img matListAvatar [src]="review.imageUrl" alt="image" class="review-author">
                                 <p matLine fxLayoutAlign="start center">
                                     <span class="fw-500">{{review.userName}}</span>&nbsp;
                                     <!-- <mat-icon class="text-muted px-1" matTooltip="Dissatisfied" matTooltipPosition="after">sentiment_dissatisfied</mat-icon> -->
