@@ -39,7 +39,8 @@ export class SignInComponent implements OnInit {
           localStorage.setItem('token', res.token);
           this.auth.user = res.data;
           this.auth.updateLoggedInStatus(true);
-          this.router.navigate(['/']);
+          this.router.navigateByUrl(this.returnUrl);
+          localStorage.removeItem('returnUrl')
         })
       }
     });
