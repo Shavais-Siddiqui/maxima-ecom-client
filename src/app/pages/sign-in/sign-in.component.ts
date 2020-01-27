@@ -41,30 +41,33 @@ export class SignInComponent implements OnInit {
 
           localStorage.setItem('token', res.token);
           this.auth.user = res.data;
-          let dbList = res.data.cart.map(x => {
-            x.productId.cartCount = x.cartCount;
-            return x.productId
-          })
-          this.auth.user.cart = dbList;
+
+          let dbList;
+          let totalItems;
+
+          if (res.data.cart.length > 0) {
+            dbList = res.data.cart.map(x => {
+              x.productId.cartCount = x.cartCount;
+              return x.productId
+            })
+            this.auth.user.cart = dbList;
+            totalItems = dbList;
+          }
+
           let localItems = JSON.parse(localStorage.getItem('cartList'))
-          let totalItems = dbList;
-          console.log(localItems)
-          let uniqueItems;
           if (localItems) {
-            console.log('inside')
+            this.auth.user.cart = localItems;
             localStorage.removeItem('cartList');
             totalItems = localItems.concat(dbList);
-
-            totalItems = totalItems.filter((item, index, self) => {
-              console.log(self, index, item);
-              return index === self.findIndex((t) => {
-                return t._id === item._id
+            if (dbList.length > 0) {
+              totalItems = totalItems.filter((item, index, self) => {
+                console.log(self, index, item);
+                return index === self.findIndex((t) => {
+                  return t._id === item._id
+                })
               })
+              this.auth.user.cart = totalItems;
             }
-            )
-            console.log(totalItems)
-
-            this.auth.user.cart = totalItems;
             let cartList = totalItems.map(x => {
               return {
                 cartCount: x.cartCount,
@@ -79,11 +82,13 @@ export class SignInComponent implements OnInit {
           this.appService.Data.cartList.length = 0;
           this.appService.Data.totalPrice = 0;
           this.appService.Data.totalCartCount = 0;
-          this.appService.Data.cartList = totalItems;
-          totalItems.forEach(product => {
-            this.appService.Data.totalPrice = this.appService.Data.totalPrice + (product.cartCount * product.newPrice);
-            this.appService.Data.totalCartCount = this.appService.Data.totalCartCount + product.cartCount;
-          });
+          if (totalItems.length > 0) {
+            this.appService.Data.cartList = totalItems;
+            totalItems.forEach(product => {
+              this.appService.Data.totalPrice = this.appService.Data.totalPrice + (product.cartCount * product.newPrice);
+              this.appService.Data.totalCartCount = this.appService.Data.totalCartCount + product.cartCount;
+            });
+          }
           this.auth.updateLoggedInStatus(true);
           this.auth.updateActiveState(true);
           this.snackBar.open('Welcome again!.', '×', { panelClass: 'success', verticalPosition: 'top', duration: 3000 });
@@ -130,30 +135,33 @@ export class SignInComponent implements OnInit {
       this.auth.login(loginData).subscribe((res: any) => {
         localStorage.setItem('token', res.token);
         this.auth.user = res.data;
-        let dbList = res.data.cart.map(x => {
-          x.productId.cartCount = x.cartCount;
-          return x.productId
-        })
-        this.auth.user.cart = dbList;
+
+        let dbList;
+        let totalItems;
+
+        if (res.data.cart.length > 0) {
+          dbList = res.data.cart.map(x => {
+            x.productId.cartCount = x.cartCount;
+            return x.productId
+          })
+          this.auth.user.cart = dbList;
+          totalItems = dbList;
+        }
+
         let localItems = JSON.parse(localStorage.getItem('cartList'))
-        let totalItems = dbList;
-        console.log(localItems)
-        let uniqueItems;
         if (localItems) {
-          console.log('inside')
+          this.auth.user.cart = localItems;
           localStorage.removeItem('cartList');
           totalItems = localItems.concat(dbList);
-
-          totalItems = totalItems.filter((item, index, self) => {
-            console.log(self, index, item);
-            return index === self.findIndex((t) => {
-              return t._id === item._id
+          if (dbList.length > 0) {
+            totalItems = totalItems.filter((item, index, self) => {
+              console.log(self, index, item);
+              return index === self.findIndex((t) => {
+                return t._id === item._id
+              })
             })
+            this.auth.user.cart = totalItems;
           }
-          )
-          console.log(totalItems)
-
-          this.auth.user.cart = totalItems;
           let cartList = totalItems.map(x => {
             return {
               cartCount: x.cartCount,
@@ -168,11 +176,14 @@ export class SignInComponent implements OnInit {
         this.appService.Data.cartList.length = 0;
         this.appService.Data.totalPrice = 0;
         this.appService.Data.totalCartCount = 0;
-        this.appService.Data.cartList = totalItems;
-        totalItems.forEach(product => {
-          this.appService.Data.totalPrice = this.appService.Data.totalPrice + (product.cartCount * product.newPrice);
-          this.appService.Data.totalCartCount = this.appService.Data.totalCartCount + product.cartCount;
-        });
+        if (totalItems.length > 0) {
+          this.appService.Data.cartList = totalItems;
+          totalItems.forEach(product => {
+            this.appService.Data.totalPrice = this.appService.Data.totalPrice + (product.cartCount * product.newPrice);
+            this.appService.Data.totalCartCount = this.appService.Data.totalCartCount + product.cartCount;
+          });
+        }
+
         this.auth.updateLoggedInStatus(true);
         this.auth.updateActiveState(res.data.active);
         this.snackBar.open('Welcome again!.', '×', { panelClass: 'success', verticalPosition: 'top', duration: 3000 });
