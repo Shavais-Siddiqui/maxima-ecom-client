@@ -2,6 +2,8 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Data, AppService } from '../../services/app.service';
 import { Product } from '../../app.models';
+import { take } from 'rxjs/operators';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
   selector: 'app-controls',
@@ -16,7 +18,7 @@ export class ControlsComponent implements OnInit {
   public count: number = 1;
   public align = 'center center';
   public checkedProduct;
-  constructor(public appService: AppService, public snackBar: MatSnackBar) {
+  constructor(public appService: AppService, public snackBar: MatSnackBar, public auth: AuthenticationService) {
 
   }
 
@@ -55,17 +57,34 @@ export class ControlsComponent implements OnInit {
         }
 
         // Set local storage after increment // 
-        let products = JSON.parse(localStorage.getItem('cartList'));
-        if (products) {
-          products.map(x => {
-            if (x._id == this.product._id) {
-              x.cartCount = this.count;
+        this.auth.isLoggedIn.pipe(take(1)).subscribe(res => {
+          if (res) {
+            let cartList = this.auth.user.cart.map(x => {
+              if (x.productId._id == this.product._id) {
+                x.cartCount = this.count;
+              }
+              return {
+                cartCount: x.cartCount,
+                productId: x.productId._id
+              }
+            })
+            this.auth.updateUser({
+              cart: cartList
+            }).subscribe(res => {
+            })
+          } else {
+            let products = JSON.parse(localStorage.getItem('cartList'));
+            if (products) {
+              products.map(x => {
+                if (x._id == this.product._id) {
+                  x.cartCount = this.count;
+                }
+              })
+              localStorage.setItem('cartList', JSON.stringify(products));
             }
-          })
-          localStorage.setItem('cartList', JSON.stringify(products));
-        }
-
-        this.changeQuantity(obj);
+          }
+          this.changeQuantity(obj);
+        })
       }
       else {
         this.snackBar.open('You can not choose more items than available. In stock ' + this.count + ' items.', '×', { panelClass: 'error', verticalPosition: 'top', duration: 3000 });
@@ -81,16 +100,35 @@ export class ControlsComponent implements OnInit {
         soldQuantity: this.count,
         total: this.count * this.product.newPrice
       }
-      let products = JSON.parse(localStorage.getItem('cartList'));
-      if (products) {
-        products.map(x => {
-          if (x._id == this.product._id) {
-            x.cartCount = this.count;
+
+      this.auth.isLoggedIn.pipe(take(1)).subscribe(res => {
+        if (res) {
+          let cartList = this.auth.user.cart.map(x => {
+            if (x.productId._id == this.product._id) {
+              x.cartCount = this.count;
+            }
+            return {
+              cartCount: x.cartCount,
+              productId: x.productId._id
+            }
+          })
+          this.auth.updateUser({
+            cart: cartList
+          }).subscribe(res => {
+          })
+        } else {
+          let products = JSON.parse(localStorage.getItem('cartList'));
+          if (products) {
+            products.map(x => {
+              if (x._id == this.product._id) {
+                x.cartCount = this.count;
+              }
+            })
+            localStorage.setItem('cartList', JSON.stringify(products));
           }
-        })
-        localStorage.setItem('cartList', JSON.stringify(products));
-      }
-      this.changeQuantity(obj);
+        }
+        this.changeQuantity(obj);
+      })
     }
   }
 

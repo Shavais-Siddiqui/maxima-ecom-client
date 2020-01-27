@@ -8,12 +8,14 @@ import { SocialUser } from "angularx-social-login";
 import { FacebookLoginProvider, GoogleLoginProvider } from "angularx-social-login";
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { Subscription } from 'rxjs';
+import { AppService } from 'src/app/services/app.service';
 
 @Component({
   selector: 'app-sign-in',
   templateUrl: './sign-in.component.html',
   styleUrls: ['./sign-in.component.scss']
 })
+
 export class SignInComponent implements OnInit {
   loginForm: FormGroup;
   registerForm: FormGroup;
@@ -22,7 +24,7 @@ export class SignInComponent implements OnInit {
   private loggedIn: boolean;
   private subscription: Subscription = new Subscription();
 
-  constructor(private route: ActivatedRoute, public formBuilder: FormBuilder, public router: Router, public snackBar: MatSnackBar, public authService: AuthService, public auth: AuthenticationService) {
+  constructor(private appService: AppService, private route: ActivatedRoute, public formBuilder: FormBuilder, public router: Router, public snackBar: MatSnackBar, public authService: AuthService, public auth: AuthenticationService) {
     let token = localStorage.getItem('token');
     if (token) {
       this.router.navigate(['/']);
@@ -36,11 +38,63 @@ export class SignInComponent implements OnInit {
       this.loggedIn = (user != null);
       if (this.loggedIn) {
         this.auth.login(user).subscribe((res: any) => {
+
           localStorage.setItem('token', res.token);
           this.auth.user = res.data;
+          let dbList = res.data.cart.map(x => {
+            x.productId.cartCount = x.cartCount;
+            return x.productId
+          })
+          this.auth.user.cart = dbList;
+          let localItems = JSON.parse(localStorage.getItem('cartList'))
+          let totalItems = dbList;
+          console.log(localItems)
+          let uniqueItems;
+          if (localItems) {
+            console.log('inside')
+            localStorage.removeItem('cartList');
+            totalItems = localItems.concat(dbList);
+
+            totalItems = totalItems.filter((item, index, self) => {
+              console.log(self, index, item);
+              return index === self.findIndex((t) => {
+                return t._id === item._id
+              })
+            }
+            )
+            console.log(totalItems)
+
+            this.auth.user.cart = totalItems;
+            let cartList = totalItems.map(x => {
+              return {
+                cartCount: x.cartCount,
+                productId: x._id
+              }
+            })
+            this.auth.updateUser({
+              cart: cartList
+            }).subscribe(res => {
+            })
+          }
+          this.appService.Data.cartList.length = 0;
+          this.appService.Data.totalPrice = 0;
+          this.appService.Data.totalCartCount = 0;
+          this.appService.Data.cartList = totalItems;
+          totalItems.forEach(product => {
+            this.appService.Data.totalPrice = this.appService.Data.totalPrice + (product.cartCount * product.newPrice);
+            this.appService.Data.totalCartCount = this.appService.Data.totalCartCount + product.cartCount;
+          });
           this.auth.updateLoggedInStatus(true);
+          this.auth.updateActiveState(true);
+          this.snackBar.open('Welcome again!.', '×', { panelClass: 'success', verticalPosition: 'top', duration: 3000 });
           this.router.navigateByUrl(this.returnUrl);
           localStorage.removeItem('returnUrl')
+
+          // localStorage.setItem('token', res.token);
+          // this.auth.user = res.data;
+          // this.auth.updateLoggedInStatus(true);
+          // this.router.navigateByUrl(this.returnUrl);
+          // localStorage.removeItem('returnUrl')
         })
       }
     });
@@ -76,7 +130,51 @@ export class SignInComponent implements OnInit {
       this.auth.login(loginData).subscribe((res: any) => {
         localStorage.setItem('token', res.token);
         this.auth.user = res.data;
+        let dbList = res.data.cart.map(x => {
+          x.productId.cartCount = x.cartCount;
+          return x.productId
+        })
+        this.auth.user.cart = dbList;
+        let localItems = JSON.parse(localStorage.getItem('cartList'))
+        let totalItems = dbList;
+        console.log(localItems)
+        let uniqueItems;
+        if (localItems) {
+          console.log('inside')
+          localStorage.removeItem('cartList');
+          totalItems = localItems.concat(dbList);
+
+          totalItems = totalItems.filter((item, index, self) => {
+            console.log(self, index, item);
+            return index === self.findIndex((t) => {
+              return t._id === item._id
+            })
+          }
+          )
+          console.log(totalItems)
+
+          this.auth.user.cart = totalItems;
+          let cartList = totalItems.map(x => {
+            return {
+              cartCount: x.cartCount,
+              productId: x._id
+            }
+          })
+          this.auth.updateUser({
+            cart: cartList
+          }).subscribe(res => {
+          })
+        }
+        this.appService.Data.cartList.length = 0;
+        this.appService.Data.totalPrice = 0;
+        this.appService.Data.totalCartCount = 0;
+        this.appService.Data.cartList = totalItems;
+        totalItems.forEach(product => {
+          this.appService.Data.totalPrice = this.appService.Data.totalPrice + (product.cartCount * product.newPrice);
+          this.appService.Data.totalCartCount = this.appService.Data.totalCartCount + product.cartCount;
+        });
         this.auth.updateLoggedInStatus(true);
+        this.auth.updateActiveState(res.data.active);
         this.snackBar.open('Welcome again!.', '×', { panelClass: 'success', verticalPosition: 'top', duration: 3000 });
         this.router.navigateByUrl(this.returnUrl);
         localStorage.removeItem('returnUrl')
@@ -90,6 +188,7 @@ export class SignInComponent implements OnInit {
         localStorage.setItem('token', res.token);
         this.auth.user = res.data;
         this.auth.updateLoggedInStatus(true);
+        this.auth.updateActiveState(false);
         this.snackBar.open('You registered successfully, please verify your Email.', '×', { panelClass: 'success', verticalPosition: 'top', duration: 5000 });
         this.router.navigate(['/']);
       })

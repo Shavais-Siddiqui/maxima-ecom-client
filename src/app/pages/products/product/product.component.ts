@@ -9,6 +9,7 @@ import { ProductZoomComponent } from './product-zoom/product-zoom.component';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NgbRatingConfig } from '@ng-bootstrap/ng-bootstrap';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-product',
@@ -139,12 +140,12 @@ export class ProductComponent implements OnInit {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
-    this.sub2.unsubscribe();
+    // this.sub2.unsubscribe();
   }
 
   public onSubmitReview(): void {
     if (this.form.valid) {
-      this.sub2 = this.auth.isLoggedIn.subscribe(res => {
+      this.auth.isLoggedIn.pipe(take(1)).subscribe(res => {
         if (res) {
           // Add Review
           let data = {

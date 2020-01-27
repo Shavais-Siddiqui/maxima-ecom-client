@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Category, Product } from '../app.models';
+import { AuthenticationService } from '../services/authentication.service';
+import { take } from 'rxjs/operators';
 
 export class Data {
     constructor(public categories: Category[],
@@ -26,7 +28,7 @@ export class AppService {
     public url = "assets/data/";
     public baseUrl = 'https://maximaecommerceserver.herokuapp.com/api/'
     public localUrl = 'http://localhost:3000/api/';
-    constructor(public http: HttpClient, public snackBar: MatSnackBar) {
+    constructor(public http: HttpClient, public snackBar: MatSnackBar, private authService: AuthenticationService) {
         this.getCategories().subscribe((res: any) => {
             this.Data.categories = res.data;
         });
@@ -116,10 +118,25 @@ export class AppService {
             this.Data.totalCartCount = this.Data.totalCartCount + product.cartCount;
         });
         // Add items to the localstorage
-        localStorage.setItem('cartList', JSON.stringify(this.Data.cartList));
-        message = 'The product ' + product.name + ' has been added to cart.';
-        status = 'success';
-        this.snackBar.open(message, '×', { panelClass: [status], verticalPosition: 'top', duration: 3000 });
+        this.authService.isLoggedIn.pipe(take(1)).subscribe(res => {
+            if (res) {
+                let cartList = this.Data.cartList.map(x => {
+                    return {
+                        cartCount: x.cartCount,
+                        productId: x._id
+                    }
+                })
+                this.authService.updateUser({
+                    cart: cartList
+                }).subscribe(res => {
+                })
+            } else {
+                localStorage.setItem('cartList', JSON.stringify(this.Data.cartList));
+            }
+            message = 'The product ' + product.name + ' has been added to cart.';
+            status = 'success';
+            this.snackBar.open(message, '×', { panelClass: [status], verticalPosition: 'top', duration: 3000 });
+        })
     }
 
     public resetProductCartCount(product: Product) {

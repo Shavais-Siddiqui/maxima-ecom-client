@@ -26,7 +26,7 @@ export class AuthenticationService {
       // User is logged in
       this.initialValue = true
       // Get the updated data from the server using jwt
-      this.getUserData();
+      // this.getUserData();
     } else {
       this.initialValue = false;
     }
@@ -36,7 +36,7 @@ export class AuthenticationService {
     // Verified
     this.userstatusSubject = new BehaviorSubject<boolean>(true);
     this.isUserActive = this.userstatusSubject.asObservable();
-    
+
   }
 
   initialStatus() {
@@ -77,9 +77,10 @@ export class AuthenticationService {
   }
 
   getUserData() {
-    this.http.get(this.baseUrl + 'get-data').subscribe((res: any) => {
-      this.user = res.data;
-      this.userstatusSubject.next(res.data.active)
-    })
+   return this.http.get(this.baseUrl + 'get-data');
+  }
+
+  updateUser(data) {
+    return this.http.patch(this.localUrl + 'update/' + this.user._id, data);
   }
 }

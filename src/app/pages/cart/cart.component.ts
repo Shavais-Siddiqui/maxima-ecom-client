@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Data, AppService } from '../../services/app.service';
+import { take } from 'rxjs/operators';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
   selector: 'app-cart',
@@ -11,7 +13,7 @@ export class CartComponent implements OnInit {
   grandTotal = 0;
   cartItemCount = {};
   cartItemCountTotal = 0;
-  constructor(public appService: AppService) { }
+  constructor(public appService: AppService, public auth: AuthenticationService) { }
 
   ngOnInit() {
     this.appService.Data.cartList.forEach((product: any) => {
@@ -58,27 +60,31 @@ export class CartComponent implements OnInit {
     const index: number = this.appService.Data.cartList.indexOf(product);
     if (index !== -1) {
       this.appService.Data.cartList.splice(index, 1);
-      localStorage.setItem('cartList', JSON.stringify(this.appService.Data.cartList));
+      this.auth.isLoggedIn.pipe(take(1)).subscribe(res => {
+        if (res) {
+          let cartList = this.appService.Data.cartList.map(x => {
+            return {
+              cartCount: x.cartCount,
+              productId: x._id
+            }
+          })
+          this.auth.updateUser({
+            cart: cartList
+          }).subscribe(res => {
+          })
+        } else {
+          localStorage.setItem('cartList', JSON.stringify(this.appService.Data.cartList));
+        }
+      })
       this.grandTotal = this.grandTotal - this.total[product._id];
       this.appService.Data.totalPrice = this.grandTotal;
-      // this.total.forEach(val => {
-      //   if(val == this.total[product._id]){
-      //     this.total[product._id] = 0;
-      //   }
-      // });
       for (let i in this.total) {
         if (i == this.total[product._id]) {
           this.total[product._id] = 0;
         }
       }
-
       this.cartItemCountTotal = this.cartItemCountTotal - this.cartItemCount[product._id];
       this.appService.Data.totalCartCount = this.cartItemCountTotal;
-      // this.cartItemCount.forEach(val=>{
-      //   if(val == this.cartItemCount[product._id]){
-      //     this.cartItemCount[product._id] = 0;
-      //   }
-      // });
       for (let i in this.cartItemCount) {
         if (i == this.cartItemCount[product._id]) {
           this.cartItemCount[product._id] = 0;
@@ -89,13 +95,35 @@ export class CartComponent implements OnInit {
   }
 
   public clear() {
-    localStorage.removeItem('cartList');
-    this.appService.Data.cartList.forEach(product => {
-      this.appService.resetProductCartCount(product);
-    });
-    this.appService.Data.cartList.length = 0;
-    this.appService.Data.totalPrice = 0;
-    this.appService.Data.totalCartCount = 0;
+    // localStorage.removeItem('cartList');
+    // this.appService.Data.cartList.forEach(product => {
+    //   this.appService.resetProductCartCount(product);
+    // });
+    // this.appService.Data.cartList.length = 0;
+    // this.appService.Data.totalPrice = 0;
+    // this.appService.Data.totalCartCount = 0;
+    this.auth.isLoggedIn.pipe(take(1)).subscribe(res => {
+      if (res) {
+        this.auth.updateUser({
+          cart: []
+        }).subscribe(res => {
+        })
+        this.appService.Data.cartList.forEach(product => {
+          this.appService.resetProductCartCount(product);
+        });
+        this.appService.Data.cartList.length = 0;
+        this.appService.Data.totalPrice = 0;
+        this.appService.Data.totalCartCount = 0;
+      } else {
+        localStorage.removeItem('cartList');
+        this.appService.Data.cartList.forEach(product => {
+          this.appService.resetProductCartCount(product);
+        });
+        this.appService.Data.cartList.length = 0;
+        this.appService.Data.totalPrice = 0;
+        this.appService.Data.totalCartCount = 0;
+      }
+    })
   }
 
 }

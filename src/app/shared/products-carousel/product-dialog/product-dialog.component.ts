@@ -19,15 +19,22 @@ export class ProductDialogComponent implements OnInit {
   constructor(public appService: AppService,
     public dialogRef: MatDialogRef<ProductDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public product: Product) {
-    let localProducts = JSON.parse(localStorage.getItem('cartList'));
-    if (localProducts) {
-      let products = localProducts.filter(x => {
-        return x._id == this.product._id
-      })
-      if (products.length > 0) {
-        this.product = products[0]
-      }
+
+    // let localProducts = JSON.parse(localStorage.getItem('cartList'));
+    // if (localProducts) {
+    //   let products = localProducts.filter(x => {
+    //     return x._id == this.product._id
+    //   })
+    //   if (products.length > 0) {
+    //     this.product = products[0]
+    //   }
+    // }
+    let products = this.appService.Data.cartList.filter(x => x._id == this.product._id)
+    if (products.length > 0) {
+      this.product = products[0]
     }
+    console.log(this.product)
+
   }
 
   ngOnInit() {

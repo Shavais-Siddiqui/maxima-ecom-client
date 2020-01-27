@@ -39,6 +39,12 @@ export class TopMenuComponent implements OnInit {
   }
 
   public signOut() {
+    this.appService.Data.cartList.forEach(product => {
+      this.appService.resetProductCartCount(product);
+    });
+    this.appService.Data.cartList.length = 0;
+    this.appService.Data.totalPrice = 0;
+    this.appService.Data.totalCartCount = 0;
     this.authService.signOut();
   }
 }
