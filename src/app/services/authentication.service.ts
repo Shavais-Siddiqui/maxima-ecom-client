@@ -81,6 +81,6 @@ export class AuthenticationService {
   }
 
   updateUser(data) {
-    return this.http.patch(this.localUrl + 'update/' + this.user._id, data);
+    return this.http.patch(this.baseUrl + 'update/' + this.user._id, data);
   }
 }
