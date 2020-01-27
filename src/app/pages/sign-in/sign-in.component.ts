@@ -89,18 +89,17 @@ export class SignInComponent implements OnInit {
               this.appService.Data.totalCartCount = this.appService.Data.totalCartCount + product.cartCount;
             });
           }
-          this.auth.updateLoggedInStatus(true);
-          this.auth.updateActiveState(true);
-          this.snackBar.open('Welcome again!.', '×', { panelClass: 'success', verticalPosition: 'top', duration: 3000 });
-          this.router.navigateByUrl(this.returnUrl);
-          localStorage.removeItem('returnUrl')
-
           // localStorage.setItem('token', res.token);
           // this.auth.user = res.data;
           // this.auth.updateLoggedInStatus(true);
           // this.router.navigateByUrl(this.returnUrl);
           // localStorage.removeItem('returnUrl')
         })
+        this.auth.updateLoggedInStatus(true);
+        this.auth.updateActiveState(true);
+        this.snackBar.open('Welcome again!.', '×', { panelClass: 'success', verticalPosition: 'top', duration: 3000 });
+        this.router.navigateByUrl(this.returnUrl);
+        localStorage.removeItem('returnUrl')
       }
     });
 
@@ -183,13 +182,12 @@ export class SignInComponent implements OnInit {
             this.appService.Data.totalCartCount = this.appService.Data.totalCartCount + product.cartCount;
           });
         }
-
-        this.auth.updateLoggedInStatus(true);
         this.auth.updateActiveState(res.data.active);
-        this.snackBar.open('Welcome again!.', '×', { panelClass: 'success', verticalPosition: 'top', duration: 3000 });
-        this.router.navigateByUrl(this.returnUrl);
-        localStorage.removeItem('returnUrl')
       })
+      this.auth.updateLoggedInStatus(true);
+      this.snackBar.open('Welcome again!.', '×', { panelClass: 'success', verticalPosition: 'top', duration: 3000 });
+      this.router.navigateByUrl(this.returnUrl);
+      localStorage.removeItem('returnUrl')
     }
   }
 
