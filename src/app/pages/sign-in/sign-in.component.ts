@@ -34,7 +34,7 @@ export class SignInComponent implements OnInit {
 
   ngOnInit() {
     this.returnUrl = JSON.parse(localStorage.getItem('returnUrl')) || '/';
-    this.authService.authState.subscribe((user) => {
+    this.authService.authState.pipe(take(1)).subscribe((user) => {
       console.log(user)
       this.user = user;
       this.loggedIn = (user != null);
@@ -60,10 +60,30 @@ export class SignInComponent implements OnInit {
 
   signInWithGoogle(): void {
     this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
+    this.authService.authState.pipe(take(1)).subscribe((user) => {
+      console.log(user, "Inside Google func call 64")
+      this.user = user;
+      this.loggedIn = (user != null);
+      console.log(this.loggedIn, "Inside Google func call 67" )
+      if (this.loggedIn) {
+        console.log('Inside Google func call');
+        this.login(user);
+      }
+    });
   }
 
   signInWithFB(): void {
     this.authService.signIn(FacebookLoginProvider.PROVIDER_ID);
+    this.authService.authState.pipe(take(1)).subscribe((user) => {
+      console.log(user, 'Inside fb func call 78')
+      this.user = user;
+      this.loggedIn = (user != null);
+      console.log(this.loggedIn, 'Inside fb func call 81')
+      if (this.loggedIn) {
+        console.log('Inside fb func call');
+        this.login(user);
+      }
+    });
   }
 
   public onLoginFormSubmit(values: Object): void {
