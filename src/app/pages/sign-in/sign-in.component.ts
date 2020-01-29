@@ -34,15 +34,12 @@ export class SignInComponent implements OnInit {
 
   ngOnInit() {
     this.returnUrl = JSON.parse(localStorage.getItem('returnUrl')) || '/';
-    this.authService.authState.pipe(take(1)).subscribe((user) => {
-      console.log(user)
-      this.user = user;
+    this.authService.authState.subscribe((user) => {
       this.loggedIn = (user != null);
-      console.log(this.loggedIn)
-      if (this.loggedIn) {
-        console.log('Inside func call');
+      if (this.loggedIn && this.user.id != user.id) {
         this.login(user);
       }
+      this.user = user;
     });
 
     this.loginForm = this.formBuilder.group({
@@ -60,30 +57,10 @@ export class SignInComponent implements OnInit {
 
   signInWithGoogle(): void {
     this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
-    this.authService.authState.pipe(take(1)).subscribe((user) => {
-      console.log(user, "Inside Google func call 64")
-      this.user = user;
-      this.loggedIn = (user != null);
-      console.log(this.loggedIn, "Inside Google func call 67" )
-      if (this.loggedIn) {
-        console.log('Inside Google func call');
-        this.login(user);
-      }
-    });
   }
 
   signInWithFB(): void {
     this.authService.signIn(FacebookLoginProvider.PROVIDER_ID);
-    this.authService.authState.pipe(take(1)).subscribe((user) => {
-      console.log(user, 'Inside fb func call 78')
-      this.user = user;
-      this.loggedIn = (user != null);
-      console.log(this.loggedIn, 'Inside fb func call 81')
-      if (this.loggedIn) {
-        console.log('Inside fb func call');
-        this.login(user);
-      }
-    });
   }
 
   public onLoginFormSubmit(values: Object): void {
@@ -114,9 +91,7 @@ export class SignInComponent implements OnInit {
   }
 
   login(data) {
-    console.log('Login called');
     this.auth.login(data).subscribe((res: any) => {
-      console.log('Login response', res)
       localStorage.setItem('token', res.token);
       this.auth.user = res.data;
 
