@@ -35,9 +35,12 @@ export class SignInComponent implements OnInit {
   ngOnInit() {
     this.returnUrl = JSON.parse(localStorage.getItem('returnUrl')) || '/';
     this.authService.authState.subscribe((user) => {
+      console.log(user)
       this.user = user;
       this.loggedIn = (user != null);
+      console.log(this.loggedIn)
       if (this.loggedIn) {
+        console.log('Inside func call');
         this.login(user);
       }
     });
@@ -91,6 +94,7 @@ export class SignInComponent implements OnInit {
   }
 
   login(data) {
+    console.log('Login called');
     this.auth.login(data).subscribe((res: any) => {
       console.log('Login response', res)
       localStorage.setItem('token', res.token);
