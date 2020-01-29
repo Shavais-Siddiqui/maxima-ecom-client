@@ -16,12 +16,14 @@ export class CartComponent implements OnInit {
   constructor(public appService: AppService, public auth: AuthenticationService) { }
 
   ngOnInit() {
-    this.appService.Data.cartList.forEach((product: any) => {
-      this.total[product._id] = product.cartCount * product.newPrice;
-      this.grandTotal += product.cartCount * product.newPrice;
-      this.cartItemCount[product._id] = product.cartCount;
-      this.cartItemCountTotal += product.cartCount;
-    })
+    setTimeout(() => {
+      this.appService.Data.cartList.forEach((product: any) => {
+        this.total[product._id] = product.cartCount * product.newPrice;
+        this.grandTotal += product.cartCount * product.newPrice;
+        this.cartItemCount[product._id] = product.cartCount;
+        this.cartItemCountTotal += product.cartCount;
+      })
+    }, 2000)
   }
 
   public updateCart(value) {

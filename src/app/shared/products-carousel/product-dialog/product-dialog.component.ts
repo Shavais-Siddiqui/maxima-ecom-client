@@ -33,8 +33,6 @@ export class ProductDialogComponent implements OnInit {
     if (products.length > 0) {
       this.product = products[0]
     }
-    console.log(this.product)
-
   }
 
   ngOnInit() {

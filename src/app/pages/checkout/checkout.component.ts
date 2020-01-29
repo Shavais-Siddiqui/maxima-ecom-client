@@ -64,7 +64,6 @@ export class CheckoutComponent implements OnInit {
     //   .pipe(
     //     startWith(""),
     //     map(value => {
-    //       console.log(value);
     //       return this._filter(value)
     //     })
     //   );
@@ -106,6 +105,5 @@ export class CheckoutComponent implements OnInit {
       this.filteredCities = res.data;
       this.billingForm.get('city').enable()
     })
-    // }
   }
 }

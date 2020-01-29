@@ -27,7 +27,6 @@ export class AppInterceptor implements HttpInterceptor {
         this.spinner.hide();
         const elapsed = Date.now() - started;
         console.log(`Request for ${req.urlWithParams} failed after ${elapsed} ms.`);
-        // debugger;
         return throwError(err);
       }
     })

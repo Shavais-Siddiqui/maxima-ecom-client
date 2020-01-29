@@ -59,15 +59,27 @@ export class ControlsComponent implements OnInit {
         // Set local storage after increment // 
         this.auth.isLoggedIn.pipe(take(1)).subscribe(res => {
           if (res) {
-            let cartList = this.auth.user.cart.map(x => {
-              if (x.productId._id == this.product._id) {
-                x.cartCount = this.count;
-              }
-              return {
-                cartCount: x.cartCount,
-                productId: x.productId._id
-              }
-            })
+            let cartList = [];
+            if (this.auth.user.cart.length > 0) {
+              cartList = this.appService.Data.cartList.map((x: any) => {
+                if (x._id == this.product._id) {
+                  x.cartCount = this.count;
+                }
+                return {
+                  cartCount: x.cartCount,
+                  productId: x._id
+                }
+              })
+            } else {
+              cartList.push({
+                cartCount: this.count,
+                productId: this.product._id
+              })
+              this.auth.user.cart.push({
+                cartCount: this.count,
+                productId: this.product
+              })
+            }
             this.auth.updateUser({
               cart: cartList
             }).subscribe(res => {

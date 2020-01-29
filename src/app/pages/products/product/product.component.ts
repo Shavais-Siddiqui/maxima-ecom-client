@@ -80,20 +80,28 @@ export class ProductComponent implements OnInit {
   public getProductById(id) {
     this.appService.getProductById(id).subscribe((res: any) => {
       this.product = res.data;
-      let localProducts = JSON.parse(localStorage.getItem('cartList'));
-      if (localProducts) {
-        let products = localProducts.filter(x => {
-          return x._id == res.data._id
-        })
-        if (products.length > 0) {
-          this.product.cartCount = products[0].cartCount;
+      this.auth.isLoggedIn.pipe(take(1)).subscribe(res => {
+        if (res) {
+          let currentProduct = this.appService.Data.cartList.filter(item => item._id == this.product._id)[0];
+          if (currentProduct) {
+            this.product.cartCount = currentProduct.cartCount
+          }
+        } else {
+          let localProducts = JSON.parse(localStorage.getItem('cartList'));
+          if (localProducts) {
+            let products = localProducts.filter(x => {
+              return x._id == res.data._id
+            })
+            if (products.length > 0) {
+              this.product.cartCount = products[0].cartCount;
+            }
+          }
         }
-      }
+      })
       this.image = res.data.images[0].medium;
       this.zoomImage = res.data.images[0].large;
       setTimeout(() => {
         this.sConfig.observer = true;
-        // this.directiveRef.setIndex(0);
       });
     });
   }
@@ -201,7 +209,6 @@ export class ProductComponent implements OnInit {
       // let products = JSON.parse(localStorage.getItem('cartList'));
       // if (products) {
       //   products.map(x => {
-      //     console.log('Hello world', x)
       //   })
       // }
     }
