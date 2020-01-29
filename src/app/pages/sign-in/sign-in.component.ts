@@ -35,11 +35,11 @@ export class SignInComponent implements OnInit {
   ngOnInit() {
     this.returnUrl = JSON.parse(localStorage.getItem('returnUrl')) || '/';
     this.authService.authState.subscribe((user) => {
+      this.user = user;
       this.loggedIn = (user != null);
-      if (this.loggedIn && this.user.id != user.id) {
+      if (this.loggedIn) {
         this.login(user);
       }
-      this.user = user;
     });
 
     this.loginForm = this.formBuilder.group({
