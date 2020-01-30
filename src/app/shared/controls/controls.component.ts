@@ -62,15 +62,15 @@ export class ControlsComponent implements OnInit {
             let cartList = [];
             // console.log(this.auth.user.cart, this.appService.Data.cartList)
             // if (this.appService.Data.cartList.length > 0) {
-              cartList = this.appService.Data.cartList.map((x: any) => {
-                if (x._id == this.product._id) {
-                  x.cartCount = this.count;
-                }
-                return {
-                  cartCount: x.cartCount,
-                  productId: x._id
-                }
-              })
+            cartList = this.appService.Data.cartList.map((x: any) => {
+              if (x._id == this.product._id) {
+                x.cartCount = this.count;
+              }
+              return {
+                cartCount: x.cartCount,
+                productId: x._id
+              }
+            })
             // } else {
             //   cartList.push({
             //     cartCount: this.count,
@@ -116,15 +116,16 @@ export class ControlsComponent implements OnInit {
 
       this.auth.isLoggedIn.pipe(take(1)).subscribe(res => {
         if (res) {
-          let cartList = this.auth.user.cart.map(x => {
-            if (x.productId._id == this.product._id) {
+          let cartList = this.appService.Data.cartList.map((x: any) => {
+            if (x._id == this.product._id) {
               x.cartCount = this.count;
             }
             return {
               cartCount: x.cartCount,
-              productId: x.productId._id
+              productId: x._id
             }
           })
+          console.log(cartList);
           this.auth.updateUser({
             cart: cartList
           }).subscribe(res => {

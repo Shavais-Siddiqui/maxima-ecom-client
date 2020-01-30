@@ -51,11 +51,6 @@ export class CartComponent implements OnInit {
           }
         }
       });
-      // let products = JSON.parse(localStorage.getItem('cartList'));
-      // if (products) {
-      //   products.map(x => {
-      //   })
-      // }
     }
   }
 

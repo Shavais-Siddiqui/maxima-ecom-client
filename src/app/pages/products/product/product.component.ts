@@ -155,7 +155,6 @@ export class ProductComponent implements OnInit {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
-    // this.sub2.unsubscribe();
   }
 
   public onSubmitReview(): void {
