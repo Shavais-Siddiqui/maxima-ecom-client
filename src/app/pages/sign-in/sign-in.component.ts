@@ -34,7 +34,7 @@ export class SignInComponent implements OnInit {
 
   ngOnInit() {
     this.returnUrl = JSON.parse(localStorage.getItem('returnUrl')) || '/';
-    this.authService.authState.subscribe((user) => {
+    this.subscription = this.authService.authState.subscribe((user) => {
       this.user = user;
       this.loggedIn = (user != null);
       if (this.loggedIn) {
@@ -88,6 +88,7 @@ export class SignInComponent implements OnInit {
   }
 
   ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   login(data) {
