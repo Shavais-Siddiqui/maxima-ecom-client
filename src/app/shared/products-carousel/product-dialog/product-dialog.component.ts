@@ -20,15 +20,6 @@ export class ProductDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<ProductDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public product: Product) {
 
-    // let localProducts = JSON.parse(localStorage.getItem('cartList'));
-    // if (localProducts) {
-    //   let products = localProducts.filter(x => {
-    //     return x._id == this.product._id
-    //   })
-    //   if (products.length > 0) {
-    //     this.product = products[0]
-    //   }
-    // }
     let products = this.appService.Data.cartList.filter(x => x._id == this.product._id)
     if (products.length > 0) {
       this.product = products[0]
@@ -62,9 +53,6 @@ export class ProductDialogComponent implements OnInit {
       }
     }
   }
-  // productId: this.product._id,
-  // soldQuantity: this.count,
-  // total: this.count * this.product.newPrice
 
   public updateCart(value) {
     if (value) {
@@ -72,18 +60,12 @@ export class ProductDialogComponent implements OnInit {
       this.total[value.productId] = value.total;
       this.cartItemCount[value.productId] = value.soldQuantity;
       this.grandTotal = 0;
-      // this.total.forEach(price => {
-      //   this.grandTotal += price;
-      // });
       for (let i in this.total) {
         this.grandTotal += this.total[i];
       }
       this.cartItemCountTotal = 0;
-      // this.cartItemCount.forEach(count => {
-      //   this.cartItemCountTotal += count;
-      // });
+      
       for (let i in this.cartItemCount) {
-        // this.grandTotal += this.cartItemCount[i];
         this.cartItemCountTotal += this.cartItemCount[i];
 
       }
@@ -92,22 +74,17 @@ export class ProductDialogComponent implements OnInit {
       this.appService.Data.totalCartCount = this.cartItemCountTotal;
 
       this.appService.Data.cartList.forEach(product => {
-        // this.cartItemCount.forEach((count, index) => {
-        //   if (product._id == index.toString()) {
-        //     product.cartCount = count;
-        //   }
-        // });
         for (let i in this.cartItemCount) {
           if (product._id == i) {
             product.cartCount = this.cartItemCount[i];
           }
         }
       });
-      let products = JSON.parse(localStorage.getItem('cartList'));
-      if (products) {
-        products.map(x => {
-        })
-      }
+      // let products = JSON.parse(localStorage.getItem('cartList'));
+      // if (products) {
+      //   products.map(x => {
+      //   })
+      // }
     }
   }
 

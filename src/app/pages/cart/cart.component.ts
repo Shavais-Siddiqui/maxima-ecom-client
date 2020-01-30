@@ -23,6 +23,7 @@ export class CartComponent implements OnInit {
         this.cartItemCount[product._id] = product.cartCount;
         this.cartItemCountTotal += product.cartCount;
       })
+      console.log(this.total)
     }, 2000)
   }
 

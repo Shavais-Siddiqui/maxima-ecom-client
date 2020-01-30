@@ -43,6 +43,13 @@ export class ProductComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.appService.Data.cartList.forEach(product => {
+      let id = Number(product._id);
+      this.total[product._id] = product.cartCount * product.newPrice;
+      this.grandTotal += product.cartCount * product.newPrice;
+      this.cartItemCount[product._id] = product.cartCount;
+      this.cartItemCountTotal += product.cartCount;
+    })
     this.sub = this.activatedRoute.params.subscribe(params => {
       this.productId = params['id'];
       this.productName = params['name'];
