@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FilterByIdPipe } from './filter-by-id.pipe';
 import { FilterBrandsPipe } from './filter-brands.pipe';
 import { BrandSearchPipe } from './brand-search.pipe';
+import { GetNewPrice } from './get-newPrice.pipe';
 
 @NgModule({
     imports: [ 
@@ -12,12 +13,14 @@ import { BrandSearchPipe } from './brand-search.pipe';
     declarations: [
         FilterByIdPipe,
         FilterBrandsPipe,
-        BrandSearchPipe
+        BrandSearchPipe,
+        GetNewPrice
     ],
     exports: [
         FilterByIdPipe,
         FilterBrandsPipe,
-        BrandSearchPipe
+        BrandSearchPipe,
+        GetNewPrice
     ]
 })
 export class PipesModule { }

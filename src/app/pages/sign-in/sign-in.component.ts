@@ -157,7 +157,7 @@ export class SignInComponent implements OnInit {
       }
       this.auth.updateActiveState(res.data.active);
       this.auth.updateLoggedInStatus(true);
-      this.snackBar.open('Welcome again!.', '×', { panelClass: 'success', verticalPosition: 'top', duration: 3000 });
+      this.snackBar.open(res.message, '×', { panelClass: 'success', verticalPosition: 'top', duration: 3000 });
       this.router.navigateByUrl(this.returnUrl);
       localStorage.removeItem('returnUrl')
     })

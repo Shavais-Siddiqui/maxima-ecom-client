@@ -60,7 +60,6 @@ export class ControlsComponent implements OnInit {
         this.auth.isLoggedIn.pipe(take(1)).subscribe(res => {
           if (res) {
             let cartList = [];
-            // console.log(this.auth.user.cart, this.appService.Data.cartList)
             // if (this.appService.Data.cartList.length > 0) {
             cartList = this.appService.Data.cartList.map((x: any) => {
               if (x._id == this.product._id) {
@@ -125,7 +124,6 @@ export class ControlsComponent implements OnInit {
               productId: x._id
             }
           })
-          console.log(cartList);
           this.auth.updateUser({
             cart: cartList
           }).subscribe(res => {

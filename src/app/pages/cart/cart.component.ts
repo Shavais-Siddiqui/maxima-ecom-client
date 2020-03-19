@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Data, AppService } from '../../services/app.service';
 import { take } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-cart',
@@ -13,9 +14,10 @@ export class CartComponent implements OnInit {
   grandTotal = 0;
   cartItemCount = {};
   cartItemCountTotal = 0;
-  constructor(public appService: AppService, public auth: AuthenticationService) { }
+  constructor(public appService: AppService, public auth: AuthenticationService, private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
+    this.spinner.show();
     setTimeout(() => {
       this.appService.Data.cartList.forEach((product: any) => {
         this.total[product._id] = product.cartCount * product.newPrice;
@@ -23,7 +25,7 @@ export class CartComponent implements OnInit {
         this.cartItemCount[product._id] = product.cartCount;
         this.cartItemCountTotal += product.cartCount;
       })
-      console.log(this.total)
+      this.spinner.hide();
     }, 2000)
   }
 
